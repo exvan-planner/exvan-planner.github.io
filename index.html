@@ -44,8 +44,12 @@ section{padding:90px 20px;}
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 16px;
-  font-size: clamp(28px, 5vw, 46px); /* 画面サイズに合わせて文字を大きく */
+  
+  /* ▼ ここを変更・追加 ▼ */
+  margin-top: -20px;   /* マイナスの値を入れると上に引っ張られます（調整可） */
+  margin-bottom: 32px; /* 下のバッジとの間隔を少し広げました（元は16px） */
+  
+  font-size: clamp(28px, 5vw, 46px);
   font-weight: 800;
   letter-spacing: 1px;
 }
