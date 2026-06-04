@@ -77,6 +77,14 @@ section{padding:90px 20px;}
 #hero-stats .bar-bg{background:#21262d;border-radius:3px;height:4px;margin-top:6px;}
 #hero-stats .bar{height:4px;border-radius:3px;background:linear-gradient(90deg,#58a6ff,#3fb950);width:0%;transition:width .4s;}
 
+/* ▼ ここから追加：スマホ画面（幅768px以下）の時はステータス表示を消す ▼ */
+@media (max-width: 768px) {
+  #hero-stats {
+    display: none;
+  }
+}
+/* ▲ ここまで追加 ▲ */
+
 /* ============ PROMISE ============ */
 .promise{background:#161b22;}
 .promise-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
