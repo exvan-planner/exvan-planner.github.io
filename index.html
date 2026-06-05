@@ -33,34 +33,45 @@ section{padding:90px 20px;}
 .btn-outline:hover{border-color:#58a6ff;color:#58a6ff;text-decoration:none;}
 .grad-div{height:1px;background:linear-gradient(90deg,transparent,rgba(88,166,255,0.15),transparent);margin:0 auto;max-width:800px;}
 
+/* ex-word のスタイル指定（グラデーションと中央寄せ） */
+.ex-word{
+  display:block;
+  text-align:center;
+  font-size:13px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-top:6px;
+  margin-bottom:4px;
+  background:linear-gradient(135deg,#58a6ff,#3fb950);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-weight:600;
+}
+
 /* ============ HERO ============ */
 .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;}
 #hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;}
 .hero-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;background:linear-gradient(180deg,rgba(13,17,23,0.55) 0%,rgba(13,17,23,0.7) 50%,rgba(13,17,23,0.92) 100%);}
 .hero-content{position:relative;z-index:3;text-align:center;padding:80px 20px 60px;}
 
-/* ここから追加：ヒーローセクション用のブランドロゴ設定 */
+/* ヒーローセクション用のブランドロゴ設定 */
 .hero-brand {
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  /* ▼ ここを変更・追加 ▼ */
-  margin-top: -50px;   /* マイナスの値を入れると上に引っ張られます（調整可） */
-  margin-bottom: 32px; /* 下のバッジとの間隔を少し広げました（元は16px） */
-  
+  margin-top: -50px;
+  margin-bottom: 32px;
   font-size: clamp(28px, 5vw, 46px);
   font-weight: 800;
   letter-spacing: 1px;
 }
 .hero-brand img {
-  height: clamp(40px, 6vw, 64px); /* 画面サイズに合わせてロゴ画像を大きく */
+  height: clamp(40px, 6vw, 64px);
   margin-right: 12px;
 }
 .hero-brand .brand-highlight {
-  color: #58a6ff; /* VANの部分だけアクセントカラーに */
+  color: #58a6ff;
 }
-/* ここまで追加 */
 
 .hero-badge{display:inline-block;margin-bottom:20px;padding:5px 14px;border-radius:16px;border:1px solid rgba(63,185,80,0.3);font-size:11px;color:#3fb950;letter-spacing:1px;}
 .hero-content h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.25;margin-bottom:16px;}
@@ -68,7 +79,6 @@ section{padding:90px 20px;}
 .hero-content .tl{font-size:clamp(14px,2vw,18px);color:#8b949e;max-width:580px;margin:0 auto 8px;}
 .hero-content .tl2{font-size:13px;color:#6e7681;margin-bottom:32px;}
 .hero-content .cta-group{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
-.hero-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:3;font-size:10px;color:#484f58;}
 #hero-stats{position:absolute;top:70px;right:24px;z-index:3;background:rgba(13,17,23,0.7);backdrop-filter:blur(8px);border:1px solid rgba(88,166,255,0.12);border-radius:10px;padding:14px 18px;min-width:160px;font-size:12px;}
 #hero-stats .hs-row{display:flex;justify-content:space-between;padding:2px 0;}
 #hero-stats .hs-l{color:#6e7681;}
@@ -77,13 +87,12 @@ section{padding:90px 20px;}
 #hero-stats .bar-bg{background:#21262d;border-radius:3px;height:4px;margin-top:6px;}
 #hero-stats .bar{height:4px;border-radius:3px;background:linear-gradient(90deg,#58a6ff,#3fb950);width:0%;transition:width .4s;}
 
-/* ▼ ここから追加：スマホ画面（幅768px以下）の時はステータス表示を消す ▼ */
+/* スマホ画面（幅768px以下）の時はステータス表示を消す */
 @media (max-width: 768px) {
   #hero-stats {
     display: none;
   }
 }
-/* ▲ ここまで追加 ▲ */
 
 /* ============ PROMISE ============ */
 .promise{background:#161b22;}
@@ -173,18 +182,6 @@ section{padding:90px 20px;}
 .phil-list li{padding:6px 0;font-size:14px;color:#8b949e;list-style:none;}
 .phil-list li::before{content:'— ';color:#3fb950;}
 
-/* PRICING */
-.pricing{background:#161b22;}
-.price-box{max-width:500px;margin:0 auto 40px;text-align:center;background:rgba(20,25,40,0.6);border:1px solid rgba(63,185,80,0.2);border-radius:16px;padding:40px 32px;}
-.price-box .price-num{font-size:clamp(36px,6vw,52px);font-weight:800;background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.price-box .price-per{font-size:14px;color:#8b949e;margin-bottom:16px;}
-.price-box .price-detail{font-size:13px;color:#6e7681;margin-bottom:4px;}
-.price-box .price-calc{margin-top:16px;padding:12px;background:rgba(63,185,80,0.06);border-radius:8px;font-size:13px;color:#3fb950;}
-.cmp-table{width:100%;max-width:650px;margin:0 auto;border-collapse:collapse;}
-.cmp-table th,.cmp-table td{padding:10px 16px;text-align:center;border-bottom:1px solid #21262d;font-size:13px;}
-.cmp-table th{color:#58a6ff;font-size:12px;font-weight:600;}
-.cmp-table .hi{color:#3fb950;font-weight:600;}
-
 /* SECURITY */
 .security{background:#0d1117;}
 .sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;max-width:800px;margin:0 auto;}
@@ -223,11 +220,31 @@ section{padding:90px 20px;}
 
 footer{background:#010409;border-top:1px solid #21262d;padding:32px 20px;text-align:center;}
 footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{color:#58a6ff;}
+
+/* Slide-in Panel */
+.slide-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s;}
+.slide-overlay.active{opacity:1;pointer-events:auto;}
+.slide-panel{position:fixed;top:0;right:-520px;width:min(500px,90vw);height:100%;background:#161b22;border-left:1px solid #21262d;z-index:1001;transition:right .35s ease;overflow-y:auto;padding:0;}
+.slide-panel.active{right:0;}
+.slide-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid #21262d;position:sticky;top:0;background:#161b22;z-index:2;}
+.slide-header h3{font-size:16px;color:#58a6ff;}
+.slide-close{background:none;border:1px solid #30363d;color:#8b949e;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer;transition:all .2s;}
+.slide-close:hover{border-color:#58a6ff;color:#58a6ff;}
+.slide-body{padding:24px;}
+.slide-img-placeholder{width:100%;aspect-ratio:16/10;background:#0d1117;border:2px dashed #30363d;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:20px;color:#484f58;font-size:13px;gap:8px;position:relative;}
+.slide-img-placeholder .ph-icon{font-size:40px;opacity:0.4;}
+.slide-highlight{margin-bottom:16px;}
+.slide-highlight .hl-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.slide-highlight .hl-box{min-width:28px;height:28px;border:2px solid #58a6ff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#58a6ff;font-weight:700;}
+.slide-highlight .hl-text{font-size:13px;color:#8b949e;}
+.slide-highlight .hl-text strong{color:#e6edf3;display:block;margin-bottom:2px;font-size:14px;}
+.slide-cta{text-align:center;margin-top:20px;padding:16px;background:rgba(88,166,255,0.04);border-radius:8px;font-size:12px;color:#6e7681;}
+[data-slide]{cursor:pointer;}
+[data-slide]:hover{border-color:#58a6ff !important;}
+
 </style>
 </head>
 <body>
-
-.ex-word{display:block;text-align:center;font-size:13px;letter-spacing:3px;text-transform:uppercase;margin-top:6px;margin-bottom:4px;background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:600;}
 
 <!-- NAV -->
 <nav>
@@ -272,17 +289,17 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <span class="ex-word">Excellent Simplicity</span>
 <p class="section-sub fade-in">高機能なだけのソフトは、もういらない。</p>
 <div class="promise-grid">
-<div class="promise-card fade-in">
+<div class="promise-card fade-in" data-slide="simple">
 <div class="p-icon">😁</div>
 <h3>すごくシンプル</h3>
 <p>簡単操作で誰でも使える。熟練の積み付けを。<br>いらない機能は徹底排除。<br>分かりにくいUIは全て削った。<br>その日から実践投入できる簡単さ。</p>
 </div>
-<div class="promise-card fade-in">
+<div class="promise-card fade-in" data-slide="visual">
 <div class="p-icon">🙆‍♂️</div>
 <h3>すごく見やすい</h3>
 <p>3Dで見れば一発で理解。<br>重量を色で可視化<br>🟢🟡🔴 過積載や偏重心を警告 <br>重なりや高低も3Dでグリグリ、誰でも確実に伝わる。</p>
 </div>
-<div class="promise-card fade-in">
+<div class="promise-card fade-in" data-slide="cost">
 <div class="p-icon">💴</div>
 <h3>すごく安い</h3>
 <p>API費用ゼロ。サーバー費用ゼロ。<br>値引きで安いのではなく、構造的に安い。<br>ローカル完結だから余計なコストが無い。<br>導入しやすい価格設定。</p>
@@ -315,9 +332,9 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <span class="ex-word">3 Expert Engines</span>
 <p class="section-sub fade-in">用途で選べる。すべて「現場で積める」設計。</p>
 <div class="eng-grid">
-<div class="eng-card kata fade-in"><div class="e-icon">📐</div><div class="e-name">KATAYOSE ENGINE</div><div class="e-q">「あとどれくらい入る？」</div><p>コンテナが決まっている状況で、奥から詰めて残スペースを可視化。物量が流動的な場面に。</p></div>
-<div class="eng-card bunsan fade-in"><div class="e-icon">♒</div><div class="e-name">BUNSAN ENGINE</div><div class="e-q">「最適にどう積む？」</div><p>独自の「高さ最適化理論」搭載。壁構造で職人のような積み方を自動生成。複数パターンを自動スコアリングし最良を提案。手動調整も自在。</p></div>
-<div class="eng-card anzen fade-in"><div class="e-icon">⚖️</div><div class="e-name">ANZEN ENGINE</div><div class="e-q">「重量物も安全に」</div><p>分散エンジンの全機能＋重心制御。標準偏差で異常重量物を自動検知。シーソー配置・中央寄せで安全な積付けを実現。</p></div>
+<div class="eng-card kata fade-in" data-slide="katayose"><div class="e-icon">📐</div><div class="e-name">KATAYOSE ENGINE</div><div class="e-q">「あとどれくらい入る？」</div><p>コンテナが決まっている状況で、奥から詰めて残スペースを可視化。物量が流動的な場面に。</p></div>
+<div class="eng-card bunsan fade-in" data-slide="bunsan"><div class="e-icon">♒</div><div class="e-name">BUNSAN ENGINE</div><div class="e-q">「最適にどう積む？」</div><p>独自の「高さ最適化理論」搭載。壁構造で職人のような積み方を自動生成。複数パターンを自動スコアリングし最良を提案。手動調整も自在。</p></div>
+<div class="eng-card anzen fade-in" data-slide="anzen"><div class="e-icon">⚖️</div><div class="e-name">ANZEN ENGINE</div><div class="e-q">「重量物も安全に」</div><p>分散エンジンの全機能＋重心制御。標準偏差で異常重量物を自動検知。シーソー配置・中央寄せで安全な積付けを実現。</p></div>
 </div>
 </div>
 </section>
@@ -366,15 +383,15 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <span class="ex-word">5 Exclusive Features</span>
 <p class="section-sub fade-in">現場で何が変わるか。それだけを追求した。</p>
 <div class="f5-grid">
-<div class="f5-card fade-in"><div class="fi">🌐</div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
+<div class="f5-card fade-in" data-slide="html3d"><div class="fi">🌐</div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
 <div style="margin-top:12px;">
   <a href="demo.html" target="_blank" style="color:#58a6ff; font-size:13px; font-weight:bold; display:inline-block;">▶ 実際の3D出力サンプルを見る</a>
 </div>
 <span class="tag">業界初</span></div>
-<div class="f5-card fade-in"><div class="fi">♒</div><h4>自動高さ調整機能</h4><p>独自理論で最適な積み高さを自動検知。複数パターンを自動スコアリング。詰めるだけじゃない。荷崩れしない・作業しやすい・壁が綺麗。職人が積んだような配置を自動生成。</p><span class="tag">独自技術</span></div>
-<div class="f5-card fade-in"><div class="fi">🛡️</div><h4>安全アラート機能</h4><p>過積載・偏重心を 🟢🟡🔴 と数値でリアルタイム表示。2軸/3軸計算対応。Safe Zone可視化・重量ヒートマップ直感的把握。</p><span class="tag">可視化</span></div>
-<div class="f5-card fade-in"><div class="fi">🤖</div><h4>AI連携データ整形</h4><p>最も面倒なデータ整備をAIに任せる設計。PLやINVのデータをLLMで整形し、コピペで取込。アプリにAIは非搭載。企業の既存LLMを使うからAPI費用ゼロ。プロンプトはカスタマイズ保存可能。</p><span class="tag">API費用¥0</span></div>
-<div class="f5-card fade-in"><div class="fi">📋</div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p><span class="tag">エビデンス</span></div>
+<div class="f5-card fade-in" data-slide="waterline"><div class="fi">♒</div><h4>自動高さ調整機能</h4><p>独自理論で最適な積み高さを自動検知。複数パターンを自動スコアリング。詰めるだけじゃない。荷崩れしない・作業しやすい・壁が綺麗。職人が積んだような配置を自動生成。</p><span class="tag">独自技術</span></div>
+<div class="f5-card fade-in" data-slide="safety"><div class="fi">🛡️</div><h4>安全アラート機能</h4><p>過積載・偏重心を 🟢🟡🔴 と数値でリアルタイム表示。2軸/3軸計算対応。Safe Zone可視化・重量ヒートマップ直感的把握。</p><span class="tag">可視化</span></div>
+<div class="f5-card fade-in" data-slide="ai"><div class="fi">🤖</div><h4>AI連携データ整形</h4><p>最も面倒なデータ整備をAIに任せる設計。PLやINVのデータをLLMで整形し、コピペで取込。アプリにAIは非搭載。企業の既存LLMを使うからAPI費用ゼロ。プロンプトはカスタマイズ保存可能。</p><span class="tag">API費用¥0</span></div>
+<div class="f5-card fade-in" data-slide="checklist"><div class="fi">📋</div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p><span class="tag">エビデンス</span></div>
 </div>
 </div>
 </section>
@@ -414,8 +431,6 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </section>
 <div class="grad-div"></div>
 
-
-
 <!-- ============ SECURITY ============ -->
 <section class="security">
 <div class="container">
@@ -437,10 +452,10 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <h2 class="section-title fade-in">ご利用の流れ</h2>
 <span class="ex-word">Express — 4 Steps to Execute</span>
 <div class="flow-grid">
-<div class="flow-step fade-in"><div class="sn">1</div><div class="si">📋</div><h4>貨物データ準備</h4><p>Excel / CSV / テキスト貼り付け。AIでの整形も可能。</p></div>
-<div class="flow-step fade-in"><div class="sn">2</div><div class="si">⚙️</div><h4>エンジン選択・計算</h4><p>3つのエンジンから選んでワンクリック。</p></div>
-<div class="flow-step fade-in"><div class="sn">3</div><div class="si">🔍</div><h4>3Dで確認・調整</h4><p>3Dビューで確認。貨物移動・再計算も自由。</p></div>
-<div class="flow-step fade-in"><div class="sn">4</div><div class="si">🌐</div><h4>出力・共有</h4><p>HTML 3D / Excelをワンクリック出力。メールで即共有。</p></div>
+<div class="flow-step fade-in" data-slide="step1"><div class="sn">1</div><div class="si">📋</div><h4>貨物データ準備</h4><p>Excel / CSV / テキスト貼り付け。AIでの整形も可能。</p></div>
+<div class="flow-step fade-in" data-slide="step2"><div class="sn">2</div><div class="si">⚙️</div><h4>エンジン選択・計算</h4><p>3つのエンジンから選んでワンクリック。</p></div>
+<div class="flow-step fade-in" data-slide="step3"><div class="sn">3</div><div class="si">🔍</div><h4>3Dで確認・調整</h4><p>3Dビューで確認。貨物移動・再計算も自由。</p></div>
+<div class="flow-step fade-in" data-slide="step4"><div class="sn">4</div><div class="si">🌐</div><h4>出力・共有</h4><p>HTML 3D / Excelをワンクリック出力。メールで即共有。</p></div>
 </div>
 </div>
 </section>
@@ -467,10 +482,18 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <span class="ex-word">Expand your logistics.</span>
 <p class="section-sub fade-in">ベータ版のご案内・導入相談など、お気軽にご連絡ください。</p>
 <div class="contact-inner fade-in">
-
+<div class="email-box"><p style="font-size:12px;color:#8b949e;margin-bottom:6px;">メールでのお問い合わせ</p><span>exvan.planner@gmail.com</span></div>
+<form onsubmit="alert('お問い合わせありがとうございます。\n（※ デモページのため、実際の送信は行われません）');return false;">
+<div class="fg"><label>お名前</label><input type="text" placeholder="山田 太郎"></div>
+<div class="fg"><label>メールアドレス</label><input type="email" placeholder="your@email.com"></div>
+<div class="fg"><label>お問い合わせ内容</label><textarea placeholder="ご質問やご要望をお書きください..."></textarea></div>
+<div class="form-submit"><button type="submit" class="btn btn-primary">送信する</button></div>
+</form>
+</div>
+</div>
 </section>
 
-<footer><p>© 2026 ExVAN Planner — Container Loading Optimization Software</p><p style="margin-top:6px;"><a href="#">プライバシーポリシー</a>　|　<a href="#">利用規約</a></p></footer>
+<footer><p>© 2026 ExVAN Planner — Container Loading Optimization Software</p><p style="margin-top:6px;"><a href="#">プライバシーポリシー</a> | <a href="#">利用規約</a></p></footer>
 
 <!-- ============ THREE.JS HERO ANIMATION ============ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
