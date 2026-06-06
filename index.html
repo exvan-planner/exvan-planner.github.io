@@ -239,6 +239,14 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 .slide-highlight .hl-text{font-size:13px;color:#8b949e;}
 .slide-highlight .hl-text strong{color:#e6edf3;display:block;margin-bottom:2px;font-size:14px;}
 .slide-cta{text-align:center;margin-top:20px;padding:16px;background:rgba(88,166,255,0.04);border-radius:8px;font-size:12px;color:#6e7681;}
+
+/* Slide panel — screenshot highlight viewer */
+.slide-img-wrap{position:relative;width:100%;border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.slide-img{width:100%;height:auto;display:block;}
+.slide-ov{position:absolute;background:rgba(0,0,0,0.65);pointer-events:none;transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease;}
+.slide-hl-frame{position:absolute;pointer-events:none;border:2px solid #58a6ff;border-radius:2px;transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease,border-color .35s ease;animation:hl-pulse-frame 1.5s ease-in-out infinite;}
+@keyframes hl-pulse-frame{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
 [data-slide]{cursor:pointer;}
 [data-slide]:hover{border-color:#58a6ff !important;}
 
@@ -700,6 +708,23 @@ const slideData = {
   },
 };
 
+// Highlight area definitions (% of image: l=left, t=top, w=width, h=height, c=color)
+const HIGHLIGHT_AREAS = {
+  sidebar:   {l:0,  t:0,  w:16, h:100, c:'#58a6ff'},
+  alert:     {l:16, t:0,  w:56, h:18,  c:'#3fb950'},
+  viewer3d:  {l:16, t:18, w:56, h:52,  c:'#58a6ff'},
+  container: {l:16, t:70, w:56, h:30,  c:'#f0883e'},
+  detail:    {l:72, t:0,  w:28, h:55,  c:'#a371f7'},
+  comment:   {l:72, t:55, w:28, h:45,  c:'#f0883e'},
+};
+const KEY_TO_AREA = {
+  simple:'sidebar', cost:'sidebar', step1:'sidebar', step2:'sidebar',
+  katayose:'viewer3d', bunsan:'viewer3d', anzen:'viewer3d', step3:'viewer3d', viewer3d:'viewer3d',
+  html3d:'detail', step4:'detail', checklist:'detail', ai:'detail',
+  safety:'viewer3d', waterline:'viewer3d',
+  alert:'alert', visual:'viewer3d',
+};
+
 // Panel Elements
 const overlay = document.getElementById('slideOverlay');
 const panel = document.getElementById('slidePanel');
@@ -707,12 +732,28 @@ const slideTitle = document.getElementById('slideTitle');
 const slideHighlights = document.getElementById('slideHighlights');
 const slideClose = document.getElementById('slideClose');
 
+function setHighlight(areaKey) {
+  const a = HIGHLIGHT_AREAS[areaKey];
+  if (!a) return;
+  const r = a.l + a.w, b = a.t + a.h;
+  document.getElementById('slideOvTop').style.cssText    = 'top:0;left:0;width:100%;height:' + a.t + '%;';
+  document.getElementById('slideOvBottom').style.cssText = 'top:' + b + '%;left:0;width:100%;height:' + (100 - b) + '%;';
+  document.getElementById('slideOvLeft').style.cssText   = 'top:' + a.t + '%;left:0;width:' + a.l + '%;height:' + a.h + '%;';
+  document.getElementById('slideOvRight').style.cssText  = 'top:' + a.t + '%;left:' + r + '%;width:' + (100 - r) + '%;height:' + a.h + '%;';
+  const fr = document.getElementById('slideHlFrame');
+  fr.style.cssText = 'top:' + a.t + '%;left:' + a.l + '%;width:' + a.w + '%;height:' + a.h + '%;border-color:' + a.c + ';animation:hl-pulse-frame 1.5s ease-in-out infinite;';
+  // Restart pulse animation
+  fr.style.animationName = 'none';
+  fr.offsetHeight;
+  fr.style.animationName = 'hl-pulse-frame';
+}
+
 function openSlide(key) {
   const data = slideData[key];
   if (!data) return;
-  
+
   slideTitle.textContent = data.title;
-  
+
   let hlHtml = '';
   data.highlights.forEach(h => {
     hlHtml += '<div class="hl-item">' +
@@ -721,7 +762,9 @@ function openSlide(key) {
       '</div>';
   });
   slideHighlights.innerHTML = hlHtml;
-  
+
+  setHighlight(KEY_TO_AREA[key] || 'viewer3d');
+
   overlay.classList.add('active');
   panel.classList.add('active');
 }
@@ -753,11 +796,13 @@ document.querySelectorAll('.acc-hd').forEach(h=>{h.addEventListener('click',()=>
 <button class="slide-close" id="slideClose">✕</button>
 </div>
 <div class="slide-body">
-<div class="slide-img-placeholder">
-<div class="ph-icon">📸</div>
-<!-- TODO: スクリーンショットをここに -->
-<!-- <img src="screenshots/xxxx.png" alt="" style="width:100%;border-radius:10px;"> -->
-<span>スクリーンショット準備中</span>
+<div class="slide-img-wrap">
+<img class="slide-img" src="https://exvan-planner.github.io/ExVANtop.png" alt="ExVAN Planner 画面">
+<div class="slide-ov" id="slideOvTop"></div>
+<div class="slide-ov" id="slideOvBottom"></div>
+<div class="slide-ov" id="slideOvLeft"></div>
+<div class="slide-ov" id="slideOvRight"></div>
+<div class="slide-hl-frame" id="slideHlFrame"></div>
 </div>
 <div class="slide-highlight" id="slideHighlights"></div>
 <div class="slide-cta">クリックで機能の詳細を確認できます</div>
