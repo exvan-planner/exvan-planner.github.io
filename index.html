@@ -748,6 +748,13 @@ const KEY_TO_AREA = {
   alert:'alert', visual:'viewer3d',
 };
 
+const DEDICATED_IMAGES = {
+  alert:    'https://exvan-planner.github.io/ss_alert.png',
+  katayose: 'https://exvan-planner.github.io/ss_katayose.png',
+  bunsan:   'https://exvan-planner.github.io/ss_bunsan.png',
+  anzen:    'https://exvan-planner.github.io/ss_anzen.png',
+};
+
 // Panel Elements
 const overlay = document.getElementById('slideOverlay');
 const panel = document.getElementById('slidePanel');
@@ -786,7 +793,18 @@ function openSlide(key) {
   });
   slideHighlights.innerHTML = hlHtml;
 
-  setHighlight(KEY_TO_AREA[key] || 'viewer3d');
+  const slideImg = document.querySelector('.slide-img');
+  const dedImg = DEDICATED_IMAGES[key];
+  const ovIds = ['slideOvTop','slideOvBottom','slideOvLeft','slideOvRight','slideHlFrame'];
+
+  if (dedImg) {
+    slideImg.src = dedImg;
+    ovIds.forEach(id => { document.getElementById(id).style.cssText = 'display:none;'; });
+  } else {
+    slideImg.src = 'https://exvan-planner.github.io/ExVANtop.png';
+    ovIds.forEach(id => { document.getElementById(id).style.display = ''; });
+    setHighlight(KEY_TO_AREA[key] || 'viewer3d');
+  }
 
   overlay.classList.add('active');
   panel.classList.add('active');
