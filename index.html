@@ -230,7 +230,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 .slide-header h3{font-size:16px;color:#58a6ff;}
 .slide-close{background:none;border:1px solid #30363d;color:#8b949e;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer;transition:all .2s;}
 .slide-close:hover{border-color:#58a6ff;color:#58a6ff;}
-.slide-body{padding:24px;}
+.slide-body{padding:0;}
 .slide-img-placeholder{width:100%;aspect-ratio:16/10;background:#0d1117;border:2px dashed #30363d;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:20px;color:#484f58;font-size:13px;gap:8px;position:relative;}
 .slide-img-placeholder .ph-icon{font-size:40px;opacity:0.4;}
 .slide-highlight{margin-bottom:16px;}
@@ -241,8 +241,10 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 .slide-cta{text-align:center;margin-top:20px;padding:16px;background:rgba(88,166,255,0.04);border-radius:8px;font-size:12px;color:#6e7681;}
 
 /* Slide panel — screenshot highlight viewer */
-.slide-img-wrap{position:relative;width:100%;border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.slide-img-wrap{position:relative;width:100%;border-radius:0;overflow:hidden;margin-bottom:0;}
 .slide-img{width:100%;height:auto;display:block;}
+.slide-highlight{padding:16px 24px 0;}
+.slide-cta{margin:0 24px 24px;}
 .slide-ov{position:absolute;background:rgba(0,0,0,0.65);pointer-events:none;transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease;}
 .slide-hl-frame{position:absolute;pointer-events:none;border:2px solid #58a6ff;border-radius:2px;transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease,border-color .35s ease;animation:hl-pulse-frame 1.5s ease-in-out infinite;}
 @keyframes hl-pulse-frame{0%,100%{opacity:1;}50%{opacity:0.35;}}
