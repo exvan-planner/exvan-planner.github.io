@@ -505,6 +505,27 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 
 <footer><p>© 2026 ExVAN Planner — Container Loading Optimization Software</p><p style="margin-top:6px;"><a href="#">プライバシーポリシー</a> | <a href="#">利用規約</a></p></footer>
 
+<!-- SLIDE-IN PANEL -->
+<div class="slide-overlay" id="slideOverlay"></div>
+<div class="slide-panel" id="slidePanel">
+<div class="slide-header">
+<h3 id="slideTitle">機能詳細</h3>
+<button class="slide-close" id="slideClose">✕</button>
+</div>
+<div class="slide-body">
+<div class="slide-img-wrap">
+<img class="slide-img" src="https://exvan-planner.github.io/ExVANtop.png" alt="ExVAN Planner 画面">
+<div class="slide-ov" id="slideOvTop"></div>
+<div class="slide-ov" id="slideOvBottom"></div>
+<div class="slide-ov" id="slideOvLeft"></div>
+<div class="slide-ov" id="slideOvRight"></div>
+<div class="slide-hl-frame" id="slideHlFrame"></div>
+</div>
+<div class="slide-highlight" id="slideHighlights"></div>
+<div class="slide-cta">クリックで機能の詳細を確認できます</div>
+</div>
+</div>
+
 <!-- ============ THREE.JS HERO ANIMATION ============ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -787,27 +808,6 @@ document.querySelectorAll('[data-slide]').forEach(el => {
 // Accordion
 document.querySelectorAll('.acc-hd').forEach(h=>{h.addEventListener('click',()=>{const it=h.parentElement;const w=it.classList.contains('open');document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));if(!w)it.classList.add('open');});});
 </script>
-
-<!-- SLIDE-IN PANEL -->
-<div class="slide-overlay" id="slideOverlay"></div>
-<div class="slide-panel" id="slidePanel">
-<div class="slide-header">
-<h3 id="slideTitle">機能詳細</h3>
-<button class="slide-close" id="slideClose">✕</button>
-</div>
-<div class="slide-body">
-<div class="slide-img-wrap">
-<img class="slide-img" src="https://exvan-planner.github.io/ExVANtop.png" alt="ExVAN Planner 画面">
-<div class="slide-ov" id="slideOvTop"></div>
-<div class="slide-ov" id="slideOvBottom"></div>
-<div class="slide-ov" id="slideOvLeft"></div>
-<div class="slide-ov" id="slideOvRight"></div>
-<div class="slide-hl-frame" id="slideHlFrame"></div>
-</div>
-<div class="slide-highlight" id="slideHighlights"></div>
-<div class="slide-cta">クリックで機能の詳細を確認できます</div>
-</div>
-</div>
 
 </body>
 </html>
