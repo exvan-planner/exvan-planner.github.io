@@ -190,6 +190,23 @@ section{padding:90px 20px;}
 .sec-card h4{font-size:15px;margin-bottom:6px;}
 .sec-card p{font-size:12px;color:#8b949e;}
 
+/* COMPARISON TABLE */
+.comparison{background:#0d1117;}
+.cmp-wrap{overflow-x:auto;}
+.cmp-table{width:100%;border-collapse:collapse;min-width:720px;}
+.cmp-table th,.cmp-table td{padding:9px 12px;border:1px solid #21262d;font-size:12px;text-align:center;vertical-align:middle;line-height:1.4;}
+.cmp-table th{font-weight:600;font-size:11px;color:#8b949e;background:#161b22;}
+.cmp-table td.lbl{text-align:left;background:#161b22;color:#e6edf3;font-size:12px;padding-left:14px;}
+.cmp-table td.lbl small{display:block;font-size:10px;color:#6e7681;margin-top:1px;}
+.cmp-table td.cat{text-align:left;font-size:11px;font-weight:700;color:#58a6ff;background:#0d1117;padding:6px 14px;letter-spacing:0.5px;border-left:3px solid #58a6ff;}
+.col-ex{background:rgba(88,166,255,0.07)!important;}
+th.col-ex{color:#58a6ff!important;font-size:12px;}
+.cmp-yes{color:#3fb950;font-size:15px;font-weight:700;}
+.cmp-no{color:#f85149;font-size:15px;}
+.cmp-par{color:#e3b341;font-size:12px;}
+.cmp-uniq{display:inline-block;font-size:9px;background:rgba(88,166,255,0.15);color:#58a6ff;border-radius:3px;padding:1px 5px;margin-left:3px;vertical-align:middle;font-weight:700;}
+.cmp-foot{font-size:11px;color:#6e7681;margin-top:16px;line-height:1.8;}
+
 /* FLOW */
 .flow{background:#161b22;}
 .flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;}
@@ -263,6 +280,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <li><a href="#promise">3つの約束</a></li>
 <li><a href="#engines">エンジン</a></li>
 <li><a href="#features5">特長</a></li>
+<li><a href="#comparison">比較表</a></li>
 <li><a href="#contact">お問い合わせ</a></li>
 </ul>
 </nav>
@@ -309,10 +327,11 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <h3>すごく見やすい</h3>
 <p>3Dで見れば一発で理解。<br>重量を色で可視化<br>🟢🟡🔴 過積載や偏重心を警告 <br>重なりや高低も3Dでグリグリ、誰でも確実に伝わる。</p>
 </div>
-<div class="promise-card fade-in" data-slide="cost">
+<div class="promise-card fade-in" id="cost-card" style="cursor:pointer;" onclick="document.getElementById('comparison').scrollIntoView({behavior:'smooth'})">
 <div class="p-icon">💴</div>
 <h3>すごく安い</h3>
 <p>API費用ゼロ。サーバー費用ゼロ。<br>値引きで安いのではなく、構造的に安い。<br>ローカル完結だから余計なコストが無い。<br>導入しやすい価格設定。</p>
+<div style="margin-top:10px;font-size:11px;color:#58a6ff;">▼ 他社との比較を見る</div>
 </div>
 </div>
 </div>
@@ -466,6 +485,183 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <div class="flow-step fade-in" data-slide="step2"><div class="sn">2</div><div class="si">⚙️</div><h4>エンジン選択・計算</h4><p>3つのエンジンから選んでワンクリック。</p></div>
 <div class="flow-step fade-in" data-slide="step3"><div class="sn">3</div><div class="si">🔍</div><h4>3Dで確認・調整</h4><p>3Dビューで確認。貨物移動・再計算も自由。</p></div>
 <div class="flow-step fade-in" data-slide="step4"><div class="sn">4</div><div class="si">🌐</div><h4>出力・共有</h4><p>HTML 3D / Excelをワンクリック出力。メールで即共有。</p></div>
+</div>
+</div>
+</section>
+<div class="grad-div"></div>
+
+<!-- ============ COMPARISON TABLE ============ -->
+<section class="comparison" id="comparison">
+<div class="container">
+<h2 class="section-title fade-in">他社との比較</h2>
+<span class="ex-word">Why ExVAN?</span>
+<p class="section-sub fade-in">海上コンテナ特化の機能と、構造的に安いコスト設計。</p>
+<div class="cmp-wrap fade-in">
+<table class="cmp-table">
+<colgroup>
+  <col style="width:28%">
+  <col style="width:18%">
+  <col style="width:18%">
+  <col style="width:18%">
+  <col style="width:18%">
+</colgroup>
+<thead>
+<tr>
+  <th></th>
+  <th class="col-ex">ExVAN Planner</th>
+  <th>バンニングマスター<br><span style="font-weight:400;font-size:10px;">VM-Cloud</span></th>
+  <th>EasyCargo<br><span style="font-weight:400;font-size:10px;">海外製</span></th>
+  <th>大手ERPオプション<br><span style="font-weight:400;font-size:10px;">日立・NEC等</span></th>
+</tr>
+</thead>
+<tbody>
+<tr><td class="cat" colspan="5">料金・コスト構造</td></tr>
+<tr>
+  <td class="lbl">費用（1PC）</td>
+  <td class="col-ex" style="color:#58a6ff;font-weight:700;font-size:13px;">¥5,000/月<br><small style="color:#6e7681;font-size:10px;">想定価格</small></td>
+  <td>コンテナ版 ¥2,000/回〜<br><small style="color:#6e7681;">月額は要問い合わせ</small></td>
+  <td>$29〜/月<br><small style="color:#6e7681;">≈ ¥4,300〜</small></td>
+  <td>要見積<br><small style="color:#6e7681;">数十万〜/年</small></td>
+</tr>
+<tr>
+  <td class="lbl">コスト構造</td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> ローカル完結<br><small style="color:#6e7681;">クラウド月額なし</small></td>
+  <td>クラウド従量課金</td>
+  <td>クラウド月額固定</td>
+  <td>サーバー費用別途</td>
+</tr>
+<tr><td class="cat" colspan="5">共有・出力・セキュリティ</td></tr>
+<tr>
+  <td class="lbl">HTML 3D出力<br><small>メール添付・永続閲覧</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> ファイルが手元に残る<span class="cmp-uniq">業界初</span></td>
+  <td>URLリンク共有<br><small style="color:#6e7681;">ライセンス切れで消滅</small></td>
+  <td>URLリンク共有<br><small style="color:#6e7681;">ライセンス切れで消滅</small></td>
+  <td><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">オフライン閲覧<br><small>現場・スマホでネット不要</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-par">△</span></td>
+</tr>
+<tr>
+  <td class="lbl">CLP指示書・チェックシート出力</td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span> 基本帳票のみ</td>
+  <td><span class="cmp-yes">✓</span></td>
+</tr>
+<tr>
+  <td class="lbl">データ外部送信ゼロ</td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-no">✗</span> クラウド保存</td>
+  <td><span class="cmp-no">✗</span> クラウド保存</td>
+  <td><span class="cmp-par">△</span></td>
+</tr>
+<tr>
+  <td class="lbl">日本語UI・サポート</td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> 完全日本語</td>
+  <td><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span> 自動翻訳</td>
+  <td><span class="cmp-yes">✓</span></td>
+</tr>
+<tr><td class="cat" colspan="5">データ入力・取込フォーマット</td></tr>
+<tr>
+  <td class="lbl">Excel / CSV インポート<br><small>専用テンプレート（雛形）に入力して取込</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> 雛形DL機能あり</td>
+  <td><span class="cmp-yes">✓</span> 専用マクロDL必要</td>
+  <td><span class="cmp-yes">✓</span> 専用テンプレート必要</td>
+  <td><span class="cmp-yes">✓</span> システム連携</td>
+</tr>
+<tr>
+  <td class="lbl">テキスト貼り付け<br><small>指定フォーマット順のテキストを直接投入</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span> 専用フォーマットのみ</td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">AI連携データ整形<br><small>PLやINVの生データ → LLMで変換 → 貼り付け。プロンプト内蔵・カスタマイズ保存可</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> API費用¥0<span class="cmp-uniq">独自</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">追加インポート<br><small>既存データに追記・再計算</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-par">△</span></td>
+</tr>
+<tr>
+  <td class="lbl">画面上で直接編集<br><small>サイズ・重量をその場で変更 → 即再計算</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span> 限定的</td>
+  <td><span class="cmp-par">△</span></td>
+</tr>
+<tr><td class="cat" colspan="5">海上コンテナ特化 — 安全・重量管理</td></tr>
+<tr>
+  <td class="lbl">過積載アラート<br><small>過積載・2軸・3軸 の3種類を個別監視</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> 3種類対応</td>
+  <td><span class="cmp-par">△</span> 一部対応</td>
+  <td><span class="cmp-par">△</span> 過積載のみ</td>
+  <td><span class="cmp-par">△</span> あり</td>
+</tr>
+<tr>
+  <td class="lbl">偏重心アラート<br><small>コンテナ自重＋貨物重量のハイブリッド計算。Safe Zone 3D可視化</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> ハイブリッド計算<span class="cmp-uniq">独自</span></td>
+  <td><span class="cmp-par">△</span> 貨物のみ・数値表示</td>
+  <td><span class="cmp-par">△</span> 貨物のみ・限定的</td>
+  <td><span class="cmp-par">△</span> あり</td>
+</tr>
+<tr>
+  <td class="lbl">重量ヒートマップ<br><small>各貨物の重量を色で可視化</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-par">△</span> 限定的</td>
+  <td><span class="cmp-no">✗</span></td>
+</tr>
+<tr><td class="cat" colspan="5">海上コンテナ特化 — 独自積付ロジック</td></tr>
+<tr>
+  <td class="lbl">自動高さ最適化<br><small>独自理論で積み高さを自動検知・スコアリング</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span><span class="cmp-uniq">独自技術</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">シーソー配置・中央寄せ制御<br><small>異常重量物の自動検知と安全配置</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span><span class="cmp-uniq">独自</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">クリアランス設定<br><small>有効内寸を罫線+数値で管理</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span></td>
+  <td><span class="cmp-par">△</span></td>
+  <td><span class="cmp-par">△</span></td>
+</tr>
+<tr>
+  <td class="lbl">20F/40F/40HC 自動選定・コスト比較</td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span></td>
+</tr>
+</tbody>
+</table>
+<p class="cmp-foot">
+  ✓ 対応　△ 部分対応または条件あり　✗ 非対応<br>
+  ※ ExVAN Plannerの価格は参考値（¥5,000/PC）。詳細はお問い合わせください。<br>
+  ※ バンニングマスターコンテナ版は¥2,000/回（回数券）。月額プランは要問い合わせ。URLリンクはライセンス有効期間中のみ閲覧可能。<br>
+  ※ EasyCargo月額は為替変動あり。URLリンクはライセンス有効期間中のみ閲覧可能。<br>
+  ※ 競合情報は各社公開情報をもとに作成（2026年6月現在）。
+</p>
 </div>
 </div>
 </section>
