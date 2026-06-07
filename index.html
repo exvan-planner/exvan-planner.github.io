@@ -1082,14 +1082,6 @@ function openSlide(key) {
       hoverCap.style.cssText = 'padding:8px 16px;font-size:12px;color:#8b949e;background:#161b22;';
       hoverBox.appendChild(hoverImg);
       hoverBox.appendChild(hoverCap);
-      hoverBox.addEventListener('mouseleave', (e) => {
-        const to = e.relatedTarget;
-        const grid = document.getElementById('multiSlider');
-        if (grid && (grid === to || grid.contains(to))) return;
-        hoverBox.style.display = 'none';
-        const wraps = grid ? grid.querySelectorAll('div[style]') : [];
-        wraps.forEach(w => { if(w.style.borderColor) w.style.borderColor = '#21262d'; });
-      });
       document.querySelector('.slide-body').prepend(hoverBox);
     }
 
@@ -1113,18 +1105,20 @@ function openSlide(key) {
       wrap.appendChild(img);
       wrap.appendChild(cap);
 
-      wrap.addEventListener('mouseenter', () => {
-        wrap.style.borderColor = '#58a6ff';
-        document.getElementById('imgHoverBox').style.display = 'block';
-        document.getElementById('imgHoverImg').src = item.src;
-        document.getElementById('imgHoverCap').textContent = item.cap;
-      });
-      wrap.addEventListener('mouseleave', (e) => {
-        const to = e.relatedTarget;
+      wrap.addEventListener('click', () => {
         const hb = document.getElementById('imgHoverBox');
-        if (hb && (hb === to || hb.contains(to))) return;
-        wrap.style.borderColor = '#21262d';
-        if (hb) hb.style.display = 'none';
+        if (!hb) return;
+        const currentSrc = document.getElementById('imgHoverImg').src;
+        if (hb.style.display === 'block' && currentSrc.endsWith(item.src.split('/').pop())) {
+          hb.style.display = 'none';
+          wrap.style.borderColor = '#21262d';
+        } else {
+          document.querySelectorAll('#multiSlider div[style]').forEach(w => w.style.borderColor = '#21262d');
+          wrap.style.borderColor = '#58a6ff';
+          hb.style.display = 'block';
+          document.getElementById('imgHoverImg').src = item.src;
+          document.getElementById('imgHoverCap').textContent = item.cap;
+        }
       });
 
       grid.appendChild(wrap);
