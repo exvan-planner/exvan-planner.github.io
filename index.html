@@ -95,7 +95,7 @@ section{padding:90px 20px;}
 }
 
 /* ============ PROMISE ============ */
-.promise{background:#161b22;}
+.promise{background:#0d1117;}
 .promise-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
 .promise-card{background:rgba(20,25,40,0.6);border:1px solid #21262d;border-radius:14px;padding:32px 24px;text-align:center;transition:border-color .3s,transform .3s;}
 .promise-card:hover{border-color:#3fb950;transform:translateY(-3px);}
@@ -113,7 +113,7 @@ section{padding:90px 20px;}
 .prob-card p{font-size:12px;color:#8b949e;}
 
 /* ENGINES */
-.engines{background:#161b22;}
+.engines{background:#0d1117;}
 .eng-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
 .eng-card{background:rgba(20,25,40,0.6);border:1px solid #21262d;border-radius:14px;padding:32px 24px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
 .eng-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
@@ -127,7 +127,7 @@ section{padding:90px 20px;}
 .eng-card p{font-size:13px;color:#8b949e;}
 
 /* BA */
-.ba{background:#0d1117;}
+.ba{background:#161b22;}
 .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:880px;margin:0 auto;}
 @media(max-width:700px){.ba-grid{grid-template-columns:1fr;}}
 .ba-card{border-radius:14px;padding:28px 24px;}
@@ -141,7 +141,7 @@ section{padding:90px 20px;}
 .ba-card.after ul li::before{content:'✓ ';color:#3fb950;}
 
 /* TARGETS */
-.targets{background:#161b22;}
+.targets{background:#0d1117;}
 .tgt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
 .tgt-card{background:rgba(30,35,50,0.4);border:1px solid #21262d;border-radius:12px;padding:22px 18px;transition:border-color .3s,transform .3s;}
 .tgt-card:hover{border-color:#3fb950;transform:translateY(-3px);}
@@ -151,7 +151,7 @@ section{padding:90px 20px;}
 .tgt-card .t-quote{font-size:12px;color:#58a6ff;margin-top:8px;font-style:italic;}
 
 /* FEATURES 5 */
-.f5{background:#0d1117;}
+.f5{background:#161b22;}
 .f5-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
 .f5-card{background:rgba(30,35,50,0.45);border:1px solid #21262d;border-radius:12px;padding:28px 24px;transition:border-color .3s,transform .3s;}
 .f5-card:hover{border-color:#58a6ff;transform:translateY(-3px);}
@@ -174,7 +174,7 @@ section{padding:90px 20px;}
 .acc-bd ul li::before{content:'• ';color:#58a6ff;}
 
 /* PHILOSOPHY */
-.philosophy{background:#0d1117;}
+.philosophy{background:#161b22;}
 .phil-box{max-width:700px;margin:0 auto;text-align:center;background:linear-gradient(135deg,rgba(88,166,255,0.04),rgba(63,185,80,0.04));border:1px solid #21262d;border-radius:16px;padding:48px 36px;}
 .phil-box .phil-q{font-size:clamp(20px,3.5vw,28px);font-weight:700;margin-bottom:24px;line-height:1.4;}
 .phil-box .phil-q .gr{background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -218,7 +218,7 @@ th.col-ex{color:#58a6ff!important;font-size:12px;}
 .flow-step p{font-size:12px;color:#8b949e;}
 
 /* STATS */
-.stats-sec{background:#0d1117;}
+.stats-sec{background:#161b22;}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;text-align:center;}
 .stat-item .sn{font-size:clamp(32px,5vw,48px);font-weight:800;background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .stat-item .sl{font-size:13px;color:#8b949e;margin-top:2px;}
@@ -277,11 +277,11 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <nav>
 <div class="logo"><img src="logo.png" alt="ExVAN Planner" style="height:36px;vertical-align:middle;margin-right:8px;">Ex<span>VAN</span> Planner</div>
 <ul>
-<li><a href="#promise">3つの約束</a></li>
+<li><a href="#promise">4つの約束</a></li>
 <li><a href="#engines">エンジン</a></li>
 <li><a href="#features5">特長</a></li>
 <li><a href="#comparison">比較表</a></li>
-<li><a href="#contact">お問い合わせ</a></li>
+<li><a href="#contact">お問い合わせ・申し込み</a></li>
 </ul>
 </nav>
 
@@ -304,16 +304,32 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <p class="tl">難しい設定、一切なし。その日から実践投入できる積付け計画ツール。</p>
 <p class="tl2">HTML出力で、誰でもどこでも3D確認。</p>
 <div class="cta-group">
-<a href="#features5" class="btn btn-primary" onclick="document.getElementById('features5').scrollIntoView({behavior:'smooth'});return false;">📦 3D出力サンプルを体験する</a>
-<a href="#contact" class="btn btn-outline">お問い合わせ</a>
+<a href="#contact" class="btn btn-primary">お問い合わせ・体験版申し込み</a>
 </div>
 </div>
 </section>
+<div class="grad-div"></div>
 
-<!-- ============ 3つの約束 ============ -->
+<!-- ============ STATS ============ -->
+<section class="stats-sec">
+<div class="container">
+<div class="stats-title fade-in"><span class="ex-word" style="font-size:15px;">Express Results</span></div>
+<div class="stats-grid fade-in">
+<div class="stat-item"><div class="sn">60+</div><div class="sl">搭載機能</div></div>
+<div class="stat-item"><div class="sn">3</div><div class="sl">積付けエンジン</div></div>
+<div class="stat-item"><div class="sn">3分</div><div class="sl">プラン作成時間</div></div>
+<div class="stat-item"><div class="sn">0</div><div class="sl">データ漏洩リスク<br>コンプライアンス違反</div></div>
+</div>
+</div>
+</section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+
+<!-- ============ 4つの約束 ============ -->
 <section class="promise" id="promise">
 <div class="container">
-<h2 class="section-title fade-in">3つの約束</h2>
+<h2 class="section-title fade-in">4つの約束</h2>
 <span class="ex-word">Excellent Simplicity</span>
 <p class="section-sub fade-in">高機能なだけのソフトは、もういらない。</p>
 <div class="promise-grid">
@@ -333,13 +349,103 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <p>API費用ゼロ。サーバー費用ゼロ。<br>値引きで安いのではなく、構造的に安い。<br>ローカル完結だから余計なコストが無い。<br>導入しやすい価格設定。</p>
 <div style="margin-top:10px;font-size:11px;color:#58a6ff;">▼ 他社との比較を見る</div>
 </div>
+<div class="promise-card fade-in" data-slide="html3d_promise">
+<div class="p-icon">📤</div>
+<h3>すごく伝わる</h3>
+<p>積付けプランをHTMLファイルで出力。<br>メールに添付するだけ。<br>受け取った相手はブラウザで開くだけ——インストール不要・ソフト不要・アカウント不要。<br>荷主・倉庫・現場が同じ3Dを見て話せる。</p>
+<ul style="font-size:11px;color:#8b949e;margin-top:8px;padding-left:0;list-style:none;line-height:2;">
+<li>📦 「これが今回の積付けプランです」</li>
+<li>⚠️ 「この貨物は今回積めませんでした」</li>
+<li>📐 「梱包をあと10cm小さくすると入ります」</li>
+<li>✈️ 「この2個だけAIRにします」</li>
+</ul>
+</div>
 </div>
 <div style="text-align:center;margin-top:32px;" class="fade-in">
-<a href="#features5" class="btn btn-primary" onclick="document.getElementById('features5').scrollIntoView({behavior:'smooth'});return false;" style="margin-right:12px;">📦 6つの特長を見る</a>
-<a href="demo.html" target="_blank" class="btn btn-outline">▶ 3D出力サンプルを体験する</a>
+<a href="#features5" class="btn btn-outline" onclick="document.getElementById('features5').scrollIntoView({behavior:'smooth'});return false;" style="margin-right:12px;">📦 6つの特長を見る</a>
+<a href="demo.html" target="_blank" class="btn btn-primary">▶ 3D出力サンプルを体験する</a>
 </div>
 </div>
 </section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+
+<!-- ============ PHILOSOPHY ============ -->
+<section class="philosophy" id="philosophy">
+<div class="container">
+<div class="phil-box fade-in">
+<span class="ex-word" style="margin-bottom:16px;">Excellence</span>
+<div class="phil-q">「高性能とは、<br><span class="gr">誰でも使いこなせること。</span>」</div>
+<ul class="phil-list">
+<li>いらない機能は、面倒な手順は徹底的に削った</li>
+<li>分かりにくいUIは全て排除。見やすさ使いやすさを追求</li>
+<li>その日から実践投入。学習コスト0の現場主義</li>
+<li>3Dデータ閲覧はPCでもスマホでも誰でもどこでも費用もフリー</li>
+<li>凄い計算を、当たり前のようにシンプルに</li>
+<li>積付け計算は、答えではなく<strong>判断の入口</strong>。積めなかった貨物をどうするか——次船・LCL・AIR・梱包変更——その判断を3Dでサポートするために、待避エリアがある</li>
+</ul>
+</div>
+</div>
+</section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+
+<!-- ============ 3 ENGINES ============ -->
+<section class="engines" id="engines">
+<div class="container">
+<h2 class="section-title fade-in">3つの積付けエンジン</h2>
+<span class="ex-word">3 Expert Engines</span>
+<p class="section-sub fade-in">用途で選べる。すべて「現場で積める」設計。</p>
+<div class="eng-grid">
+<div class="eng-card kata fade-in" data-slide="katayose"><div class="e-icon">📐</div><div class="e-name">KATAYOSE ENGINE</div><div class="e-q">「あとどれくらい入る？」</div><p>コンテナが決まっている状況で、奥から詰めて残スペースを可視化。物量が流動的な場面に。</p></div>
+<div class="eng-card bunsan fade-in" data-slide="bunsan"><div class="e-icon">♒</div><div class="e-name">BUNSAN ENGINE</div><div class="e-q">「最適にどう積む？」</div><p>独自の「高さ最適化理論」搭載。壁構造で職人のような積み方を自動生成。複数パターンを自動スコアリングし最良を提案。手動調整も自在。</p></div>
+<div class="eng-card anzen fade-in" data-slide="anzen"><div class="e-icon">⚖️</div><div class="e-name">ANZEN ENGINE</div><div class="e-q">「重量物も安全に」</div><p>分散エンジンの全機能＋重心制御。標準偏差で異常重量物を自動検知。シーソー配置・中央寄せで安全な積付けを実現。</p></div>
+</div>
+</div>
+</section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
+
+<!-- ============ 5 KEY FEATURES ============ -->
+<section class="f5" id="features5">
+<div class="container">
+<h2 class="section-title fade-in">6つの特長</h2>
+<span class="ex-word">6 Exclusive Features</span>
+<p class="section-sub fade-in">現場で何が変わるか。それだけを追求した。</p>
+<div class="f5-grid">
+<div class="f5-card fade-in"><div class="fi">🌐</div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
+<div style="margin-top:12px;">
+  <a href="demo.html" target="_blank" onclick="event.stopPropagation();" style="color:#58a6ff;font-size:13px;font-weight:bold;display:inline-block;">▶ 実際の3D出力サンプルを見る</a>
+</div>
+<span class="tag">業界初</span></div>
+<div class="f5-card fade-in" data-slide="waterline"><div class="fi">♒</div><h4>自動高さ調整機能</h4><p>独自理論で最適な積み高さを自動検知。複数パターンを自動スコアリング。詰めるだけじゃない。荷崩れしない・作業しやすい・壁が綺麗。職人が積んだような配置を自動生成。</p><span class="tag">独自</span></div>
+<div class="f5-card fade-in" data-slide="safety"><div class="fi">🛡️</div><h4>安全アラート機能</h4><p>過積載・偏重心を 🟢🟡🔴 と数値でリアルタイム表示。2軸/3軸計算対応。Safe Zone可視化・重量ヒートマップ直感的把握。</p><span class="tag">可視化</span></div>
+<div class="f5-card fade-in" data-slide="ai"><div class="fi">🤖</div><h4>AI連携データ整形</h4><p>最も面倒なデータ整備をAIに任せる設計。PLやINVのデータをLLMで整形し、コピペで取込。アプリにAIは非搭載。企業の既存LLMを使うからデータ漏洩リスクゼロ。プロンプトはカスタマイズ保存可能。</p><span class="tag">漏洩リスク0</span></div>
+<div class="f5-card fade-in"><div class="fi">📋</div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p>
+<div style="margin-top:12px;">
+  <a href="ExVAN_template.xlsx" download onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;color:#3fb950;font-size:13px;font-weight:bold;">📥 Excelサンプルをダウンロード</a>
+</div>
+<span class="tag">エビデンス</span></div>
+<div class="f5-card fade-in"><div class="fi">🚧</div><h4>積み残し待避エリア</h4><p>積めなかった貨物を「外に出して眺める」——現場の思考をそのままソフトに。サイズオーバー・過積載で入らない貨物を待避エリアに仮置きし、3D表示のまま判断できる。</p>
+<ul style="font-size:11px;color:#8b949e;margin-top:10px;padding-left:16px;line-height:1.9;">
+<li>次の船便に回す</li>
+<li>LCL・混載で出す</li>
+<li>航空便（AIR）に切り替える</li>
+<li>梱包サイズ変更を荷主に提案</li>
+<li>別コンテナに移動して再計算</li>
+<li>待避状態のままHTML 3D出力して荷主に説明資料として送付</li>
+</ul>
+<span class="tag">現場主義</span></div>
+</div>
+</div>
+</section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
 <div class="grad-div"></div>
 
 <!-- ============ 課題 ============ -->
@@ -357,20 +463,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </div>
 </section>
 <div class="grad-div"></div>
-
-<!-- ============ 3 ENGINES ============ -->
-<section class="engines" id="engines">
-<div class="container">
-<h2 class="section-title fade-in">3つの積付けエンジン</h2>
-<span class="ex-word">3 Expert Engines</span>
-<p class="section-sub fade-in">用途で選べる。すべて「現場で積める」設計。</p>
-<div class="eng-grid">
-<div class="eng-card kata fade-in" data-slide="katayose"><div class="e-icon">📐</div><div class="e-name">KATAYOSE ENGINE</div><div class="e-q">「あとどれくらい入る？」</div><p>コンテナが決まっている状況で、奥から詰めて残スペースを可視化。物量が流動的な場面に。</p></div>
-<div class="eng-card bunsan fade-in" data-slide="bunsan"><div class="e-icon">♒</div><div class="e-name">BUNSAN ENGINE</div><div class="e-q">「最適にどう積む？」</div><p>独自の「高さ最適化理論」搭載。壁構造で職人のような積み方を自動生成。複数パターンを自動スコアリングし最良を提案。手動調整も自在。</p></div>
-<div class="eng-card anzen fade-in" data-slide="anzen"><div class="e-icon">⚖️</div><div class="e-name">ANZEN ENGINE</div><div class="e-q">「重量物も安全に」</div><p>分散エンジンの全機能＋重心制御。標準偏差で異常重量物を自動検知。シーソー配置・中央寄せで安全な積付けを実現。</p></div>
-</div>
-</div>
-</section>
+<div class="grad-div"></div>
 <div class="grad-div"></div>
 
 <!-- ============ BEFORE/AFTER ============ -->
@@ -388,6 +481,8 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </div>
 </div>
 </section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
 <div class="grad-div"></div>
 
 <!-- ============ TARGETS ============ -->
@@ -408,40 +503,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </div>
 </section>
 <div class="grad-div"></div>
-
-<!-- ============ 5 KEY FEATURES ============ -->
-<section class="f5" id="features5">
-<div class="container">
-<h2 class="section-title fade-in">6つの特長</h2>
-<span class="ex-word">6 Exclusive Features</span>
-<p class="section-sub fade-in">現場で何が変わるか。それだけを追求した。</p>
-<div class="f5-grid">
-<div class="f5-card fade-in"><div class="fi">🌐</div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
-<div style="margin-top:12px;">
-  <a href="demo.html" target="_blank" onclick="event.stopPropagation();" style="color:#58a6ff;font-size:13px;font-weight:bold;display:inline-block;">▶ 実際の3D出力サンプルを見る</a>
-</div>
-<span class="tag">業界初</span></div>
-<div class="f5-card fade-in" data-slide="waterline"><div class="fi">♒</div><h4>自動高さ調整機能</h4><p>独自理論で最適な積み高さを自動検知。複数パターンを自動スコアリング。詰めるだけじゃない。荷崩れしない・作業しやすい・壁が綺麗。職人が積んだような配置を自動生成。</p><span class="tag">独自</span></div>
-<div class="f5-card fade-in" data-slide="safety"><div class="fi">🛡️</div><h4>安全アラート機能</h4><p>過積載・偏重心を 🟢🟡🔴 と数値でリアルタイム表示。2軸/3軸計算対応。Safe Zone可視化・重量ヒートマップ直感的把握。</p><span class="tag">可視化</span></div>
-<div class="f5-card fade-in" data-slide="ai"><div class="fi">🤖</div><h4>AI連携データ整形</h4><p>最も面倒なデータ整備をAIに任せる設計。PLやINVのデータをLLMで整形し、コピペで取込。アプリにAIは非搭載。企業の既存LLMを使うからAPI費用ゼロ。プロンプトはカスタマイズ保存可能。</p><span class="tag">API費用¥0</span></div>
-<div class="f5-card fade-in"><div class="fi">📋</div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p>
-<div style="margin-top:12px;">
-  <a href="ExVAN_template.xlsx" download onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;color:#3fb950;font-size:13px;font-weight:bold;">📥 Excelサンプルをダウンロード</a>
-</div>
-<span class="tag">エビデンス</span></div>
-<div class="f5-card fade-in"><div class="fi">🚧</div><h4>積み残し待避エリア</h4><p>積めなかった貨物を「外に出して眺める」——現場の思考をそのままソフトに。サイズオーバー・過積載で入らない貨物を待避エリアに仮置きし、3D表示のまま判断できる。</p>
-<ul style="font-size:11px;color:#8b949e;margin-top:10px;padding-left:16px;line-height:1.9;">
-<li>次の船便に回す</li>
-<li>LCL・混載で出す</li>
-<li>航空便（AIR）に切り替える</li>
-<li>梱包サイズ変更を荷主に提案</li>
-<li>別コンテナに移動して再計算</li>
-<li>待避状態のままHTML 3D出力して荷主に説明資料として送付</li>
-</ul>
-<span class="tag">現場主義</span></div>
-</div>
-</div>
-</section>
+<div class="grad-div"></div>
 <div class="grad-div"></div>
 
 <!-- ============ ACCORDION ============ -->
@@ -459,24 +521,26 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </div>
 </section>
 <div class="grad-div"></div>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
 
-<!-- ============ PHILOSOPHY ============ -->
-<section class="philosophy" id="philosophy">
+<!-- ============ BEFORE/AFTER ============ -->
+<section class="ba">
 <div class="container">
-<div class="phil-box fade-in">
-<span class="ex-word" style="margin-bottom:16px;">Excellence</span>
-<div class="phil-q">「高性能とは、<br><span class="gr">誰でも使いこなせること。</span>」</div>
-<ul class="phil-list">
-<li>いらない機能は、面倒な手順は徹底的に削った</li>
-<li>分かりにくいUIは全て排除。見やすさ使いやすさを追求</li>
-<li>その日から実践投入。学習コスト0の現場主義</li>
-<li>3Dデータ閲覧はPCでもスマホでも誰でもどこでも費用もフリー</li>
-<li>凄い計算を、当たり前のようにシンプルに</li>
-<li>積付け計算は、答えではなく<strong>判断の入口</strong>。積めなかった貨物をどうするか——次船・LCL・AIR・梱包変更——その判断を3Dでサポートするために、待避エリアがある</li>
-</ul>
+<h2 class="section-title fade-in">何が変わるのか</h2>
+<span class="ex-word">Exceed</span>
+<div class="ba-grid fade-in">
+<div class="ba-card before"><h3>❌ 従来の方法</h3><ul>
+<li>手作業で30分以上</li><li>Excel図面で共有 → 伝わらない</li><li>経験者しか判断できない</li><li>積載率だけ追求 → 現場で積めない</li><li>クレーム時に記録がない</li><li>コンテナ選定が勘頼み</li><li>データ整備に時間がかかる</li><li>高額なソフト or 無料だけど不便なExcel</li>
+</ul></div>
+<div class="ba-card after"><h3>✅ ExVAN Planner</h3><ul>
+<li>自動計算で3分</li><li>HTML 3Dで共有 → 専用ソフト不要で共有、スマホでも！</li><li>🟢🟡🔴で誰でも安全判断</li><li>作業性・安全性も同時に最適化</li><li>チェックシートでエビデンス記録</li><li>コスト比較で最適コンテナ自動提案</li><li>AIでデータ整形 → コピペで取り込み</li><li>全機能が使い放題</li>
+</ul></div>
 </div>
 </div>
 </section>
+<div class="grad-div"></div>
+<div class="grad-div"></div>
 <div class="grad-div"></div>
 
 <!-- ============ SECURITY ============ -->
@@ -687,7 +751,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </tr>
 <tr>
   <td class="lbl">AI連携データ整形<br><small>PLやINVの生データ → LLMで変換 → 貼り付け。プロンプト内蔵・カスタマイズ保存可</small></td>
-  <td class="col-ex"><span class="cmp-yes">✓</span> API費用¥0<span class="cmp-uniq">独自</span></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> 漏洩リスク0<span class="cmp-uniq">独自</span></td>
   <td><span class="cmp-no">✗</span></td>
   <td><span class="cmp-no">✗</span></td>
   <td><span class="cmp-no">✗</span></td>
@@ -723,25 +787,12 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </div>
 </section>
 <div class="grad-div"></div>
-
-<!-- ============ STATS ============ -->
-<section class="stats-sec">
-<div class="container">
-<div class="stats-title fade-in"><span class="ex-word" style="font-size:15px;">Express Results</span></div>
-<div class="stats-grid fade-in">
-<div class="stat-item"><div class="sn">60+</div><div class="sl">搭載機能</div></div>
-<div class="stat-item"><div class="sn">3</div><div class="sl">積付けエンジン</div></div>
-<div class="stat-item"><div class="sn">3分</div><div class="sl">プラン作成時間</div></div>
-<div class="stat-item"><div class="sn">¥0</div><div class="sl">AI API費用</div></div>
-</div>
-</div>
-</section>
 <div class="grad-div"></div>
 
 <!-- ============ CONTACT ============ -->
 <section class="contact" id="contact">
 <div class="container">
-<h2 class="section-title fade-in">お問い合わせ</h2>
+<h2 class="section-title fade-in">お問い合わせ・体験版申し込み</h2>
 <span class="ex-word">Expand your logistics.</span>
 <p class="section-sub fade-in">ベータ版のご案内・導入相談など、お気軽にご連絡ください。</p>
 <div class="contact-inner fade-in">
@@ -758,7 +809,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 </div>
 </section>
 
-<footer><p>© 2026 ExVAN Planner — Container Loading Optimization Software</p><p style="margin-top:6px;"><a href="#">プライバシーポリシー</a> | <a href="#">利用規約</a></p><p style="margin-top:8px;font-size:10px;color:#30363d;">v1.0.3 — 2026.06.07</p></footer>
+<footer><p>© 2026 ExVAN Planner — Container Loading Optimization Software</p><p style="margin-top:6px;"><a href="#">プライバシーポリシー</a> | <a href="#">利用規約</a></p><p style="margin-top:8px;font-size:10px;color:#30363d;">v1.1.2 — 2026.06.08</p></footer>
 
 <!-- SLIDE-IN PANEL -->
 <div class="slide-overlay" id="slideOverlay"></div>
@@ -923,6 +974,15 @@ const slideData = {
       { label: 'H', title: 'ブラウザで開くだけ', desc: '専用ソフト不要。スマホ・タブレットにも対応。' },
       { label: 'H', title: 'メール添付OK', desc: '軽量サイズ設計。メール添付で即共有。' },
       { label: 'H', title: 'スライダー・ヒートマップ', desc: '段階再生・重量カラー表示も搭載。' },
+    ]
+  },
+  html3d_promise: {
+    title: 'すごく伝わる — HTML 3D出力で荷主・現場と共有',
+    highlights: [
+      { label: '📤', title: 'メール添付で即共有', desc: 'HTMLファイルをメールに添付するだけ。受け取った側はブラウザで開くだけ——インストール不要・アカウント不要。' },
+      { label: '🌐', title: '誰でも・どこでも・無料で閲覧', desc: 'スマホ・タブレット・PCに対応。現場・倉庫・荷主が同じ3Dを見て話せる。' },
+      { label: '⚠️', title: '積み残しも3Dで説明', desc: '積めなかった貨物も待避状態のままHTML出力。「なぜ積めないか」を視覚的に説明できる。' },
+      { label: '💼', title: '提案・交渉の資料になる', desc: '梱包変更の提案、次船への振替、LCL/AIR切替の判断——3D資料があれば荷主との合意が早い。' },
     ]
   },
   waterline: {
