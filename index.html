@@ -1108,12 +1108,14 @@ function openSlide(key) {
       wrap.addEventListener('click', () => {
         const hb = document.getElementById('imgHoverBox');
         if (!hb) return;
-        const currentSrc = document.getElementById('imgHoverImg').src;
-        if (hb.style.display === 'block' && currentSrc.endsWith(item.src.split('/').pop())) {
+        const isOpen = hb.style.display === 'block';
+        const isSame = wrap.dataset.active === '1';
+        document.querySelectorAll('#multiSlider [data-active]').forEach(w => delete w.dataset.active);
+        document.querySelectorAll('#multiSlider div').forEach(w => { if(w.style.borderColor !== undefined) w.style.borderColor = '#21262d'; });
+        if (isOpen && isSame) {
           hb.style.display = 'none';
-          wrap.style.borderColor = '#21262d';
         } else {
-          document.querySelectorAll('#multiSlider div[style]').forEach(w => w.style.borderColor = '#21262d');
+          wrap.dataset.active = '1';
           wrap.style.borderColor = '#58a6ff';
           hb.style.display = 'block';
           document.getElementById('imgHoverImg').src = item.src;
