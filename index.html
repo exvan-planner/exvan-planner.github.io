@@ -416,17 +416,17 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
 <span class="ex-word">5 Exclusive Features</span>
 <p class="section-sub fade-in">現場で何が変わるか。それだけを追求した。</p>
 <div class="f5-grid">
-<div class="f5-card fade-in" data-slide="html3d"><div class="fi">🌐</div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
+<div class="f5-card fade-in"><div class="fi">🌐</div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
 <div style="margin-top:12px;">
-  <a href="demo.html" target="_blank" style="color:#58a6ff; font-size:13px; font-weight:bold; display:inline-block;">▶ 実際の3D出力サンプルを見る</a>
+  <a href="demo.html" target="_blank" onclick="event.stopPropagation();" style="color:#58a6ff;font-size:13px;font-weight:bold;display:inline-block;">▶ 実際の3D出力サンプルを見る</a>
 </div>
 <span class="tag">業界初</span></div>
 <div class="f5-card fade-in" data-slide="waterline"><div class="fi">♒</div><h4>自動高さ調整機能</h4><p>独自理論で最適な積み高さを自動検知。複数パターンを自動スコアリング。詰めるだけじゃない。荷崩れしない・作業しやすい・壁が綺麗。職人が積んだような配置を自動生成。</p><span class="tag">独自技術</span></div>
 <div class="f5-card fade-in" data-slide="safety"><div class="fi">🛡️</div><h4>安全アラート機能</h4><p>過積載・偏重心を 🟢🟡🔴 と数値でリアルタイム表示。2軸/3軸計算対応。Safe Zone可視化・重量ヒートマップ直感的把握。</p><span class="tag">可視化</span></div>
 <div class="f5-card fade-in" data-slide="ai"><div class="fi">🤖</div><h4>AI連携データ整形</h4><p>最も面倒なデータ整備をAIに任せる設計。PLやINVのデータをLLMで整形し、コピペで取込。アプリにAIは非搭載。企業の既存LLMを使うからAPI費用ゼロ。プロンプトはカスタマイズ保存可能。</p><span class="tag">API費用¥0</span></div>
-<div class="f5-card fade-in" data-slide="checklist"><div class="fi">📋</div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p>
+<div class="f5-card fade-in"><div class="fi">📋</div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p>
 <div style="margin-top:12px;">
-  <a href="ExVAN_template.xlsx" download style="display:inline-flex;align-items:center;gap:6px;color:#3fb950;font-size:13px;font-weight:bold;">📥 入力テンプレートをダウンロード</a>
+  <a href="ExVAN_template.xlsx" download onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;color:#3fb950;font-size:13px;font-weight:bold;">📥 Excelサンプルをダウンロード</a>
 </div>
 <span class="tag">エビデンス</span></div>
 </div>
@@ -1082,6 +1082,14 @@ function openSlide(key) {
       hoverCap.style.cssText = 'padding:8px 16px;font-size:12px;color:#8b949e;background:#161b22;';
       hoverBox.appendChild(hoverImg);
       hoverBox.appendChild(hoverCap);
+      hoverBox.addEventListener('mouseleave', (e) => {
+        const to = e.relatedTarget;
+        const grid = document.getElementById('multiSlider');
+        if (grid && (grid === to || grid.contains(to))) return;
+        hoverBox.style.display = 'none';
+        const wraps = grid ? grid.querySelectorAll('div[style]') : [];
+        wraps.forEach(w => { if(w.style.borderColor) w.style.borderColor = '#21262d'; });
+      });
       document.querySelector('.slide-body').prepend(hoverBox);
     }
 
@@ -1111,9 +1119,12 @@ function openSlide(key) {
         document.getElementById('imgHoverImg').src = item.src;
         document.getElementById('imgHoverCap').textContent = item.cap;
       });
-      wrap.addEventListener('mouseleave', () => {
+      wrap.addEventListener('mouseleave', (e) => {
+        const to = e.relatedTarget;
+        const hb = document.getElementById('imgHoverBox');
+        if (hb && (hb === to || hb.contains(to))) return;
         wrap.style.borderColor = '#21262d';
-        document.getElementById('imgHoverBox').style.display = 'none';
+        if (hb) hb.style.display = 'none';
       });
 
       grid.appendChild(wrap);
