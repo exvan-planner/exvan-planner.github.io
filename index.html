@@ -976,9 +976,18 @@ const KEY_TO_AREA = {
 
 const DEDICATED_IMAGES = {
   alert:    'https://exvan-planner.github.io/ss_alert.png',
+  safety:   'https://exvan-planner.github.io/ss_alert.png',
   katayose: 'https://exvan-planner.github.io/ss_katayose.png',
   bunsan:   'https://exvan-planner.github.io/ss_bunsan.png',
   anzen:    'https://exvan-planner.github.io/ss_anzen.png',
+};
+
+const MULTI_IMAGES = {
+  anzen: [
+    { src: 'https://exvan-planner.github.io/ss_anzen.png',       cap: '通常積付け — 重心・偏重心を自動制御' },
+    { src: 'https://exvan-planner.github.io/ss_alert.png',       cap: '過積載 & 偏重心NG — アラートで即検知' },
+    { src: 'https://exvan-planner.github.io/ss_anzen_3axis.png', cap: '3軸クリア & 偏重心OK — 安全確認済み' },
+  ]
 };
 
 // Panel Elements
@@ -1020,11 +1029,65 @@ function openSlide(key) {
   slideHighlights.innerHTML = hlHtml;
 
   const slideImg = document.querySelector('.slide-img');
-  const dedImg = DEDICATED_IMAGES[key];
   const ovIds = ['slideOvTop','slideOvBottom','slideOvLeft','slideOvRight','slideHlFrame'];
+  const multiImgs = MULTI_IMAGES[key];
 
-  if (dedImg) {
-    slideImg.src = dedImg;
+  // 既存のスライダーUIを削除
+  const existingSlider = document.getElementById('multiSlider');
+  if (existingSlider) existingSlider.remove();
+
+  if (multiImgs) {
+    // 複数画像スライダーモード
+    let idx = 0;
+    slideImg.src = multiImgs[0].src;
+    ovIds.forEach(id => { document.getElementById(id).style.cssText = 'display:none;'; });
+
+    // スライダーUI生成
+    const sliderDiv = document.createElement('div');
+    sliderDiv.id = 'multiSlider';
+    sliderDiv.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 24px 0;';
+
+    const btnPrev = document.createElement('button');
+    btnPrev.textContent = '◀';
+    btnPrev.style.cssText = 'background:rgba(88,166,255,0.15);border:1px solid #58a6ff;color:#58a6ff;border-radius:6px;padding:4px 12px;cursor:pointer;font-size:14px;';
+
+    const capSpan = document.createElement('span');
+    capSpan.style.cssText = 'font-size:12px;color:#8b949e;flex:1;text-align:center;';
+    capSpan.textContent = multiImgs[0].cap;
+
+    const dotWrap = document.createElement('div');
+    dotWrap.style.cssText = 'display:flex;gap:6px;align-items:center;';
+    const dots = multiImgs.map((_, i) => {
+      const d = document.createElement('span');
+      d.style.cssText = `width:8px;height:8px;border-radius:50%;background:${i===0?'#58a6ff':'#30363d'};display:inline-block;cursor:pointer;transition:background .2s;`;
+      d.addEventListener('click', () => goTo(i));
+      return d;
+    });
+    dots.forEach(d => dotWrap.appendChild(d));
+
+    const btnNext = document.createElement('button');
+    btnNext.textContent = '▶';
+    btnNext.style.cssText = btnPrev.style.cssText;
+
+    function goTo(i) {
+      idx = (i + multiImgs.length) % multiImgs.length;
+      slideImg.src = multiImgs[idx].src;
+      capSpan.textContent = multiImgs[idx].cap;
+      dots.forEach((d, j) => d.style.background = j===idx ? '#58a6ff' : '#30363d');
+    }
+    btnPrev.addEventListener('click', () => goTo(idx - 1));
+    btnNext.addEventListener('click', () => goTo(idx + 1));
+
+    sliderDiv.appendChild(btnPrev);
+    sliderDiv.appendChild(capSpan);
+    sliderDiv.appendChild(dotWrap);
+    sliderDiv.appendChild(btnNext);
+
+    // slide-img-wrapの直後に挿入
+    document.querySelector('.slide-img-wrap').after(sliderDiv);
+
+  } else if (DEDICATED_IMAGES[key]) {
+    slideImg.src = DEDICATED_IMAGES[key];
     ovIds.forEach(id => { document.getElementById(id).style.cssText = 'display:none;'; });
   } else {
     slideImg.src = 'https://exvan-planner.github.io/ExVANtop.png';
@@ -1039,6 +1102,8 @@ function openSlide(key) {
 function closeSlide() {
   overlay.classList.remove('active');
   panel.classList.remove('active');
+  const existingSlider = document.getElementById('multiSlider');
+  if (existingSlider) existingSlider.remove();
 }
 
 slideClose.addEventListener('click', closeSlide);
