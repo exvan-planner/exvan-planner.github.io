@@ -532,7 +532,7 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
   <td style="color:#f85149;font-weight:700;">約6.7倍</td>
   <td style="color:#f85149;font-weight:700;">約4.2倍</td>
   <td style="color:#f85149;">比較不能</td>
-  <td style="color:#888780;">作業時間</td>
+  <td style="color:#888780;">作業時間に依存</td>
 </tr>
 <tr>
   <td class="lbl">コスト構造</td>
@@ -582,47 +582,6 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
   <td><span class="cmp-par">△</span> 自動翻訳</td>
   <td><span class="cmp-yes">✓</span></td>
   <td style="color:#888780;"><span class="cmp-yes">✓</span></td>
-</tr>
-<tr><td class="cat" colspan="6">データ入力・取込フォーマット</td></tr>
-<tr>
-  <td class="lbl">Excel / CSV インポート<br><small>専用テンプレート（雛形）に入力して取込</small></td>
-  <td class="col-ex"><span class="cmp-yes">✓</span> 雛形DL機能あり</td>
-  <td><span class="cmp-yes">✓</span> 専用マクロDL必要</td>
-  <td><span class="cmp-yes">✓</span> 専用テンプレート必要</td>
-  <td><span class="cmp-yes">✓</span> システム連携</td>
-  <td style="color:#888780;"><span class="cmp-yes">✓</span> これが主戦場</td>
-</tr>
-<tr>
-  <td class="lbl">テキスト貼り付け<br><small>指定フォーマット順のテキストを直接投入</small></td>
-  <td class="col-ex"><span class="cmp-yes">✓</span></td>
-  <td><span class="cmp-par">△</span> 専用フォーマットのみ</td>
-  <td><span class="cmp-no">✗</span></td>
-  <td><span class="cmp-no">✗</span></td>
-  <td style="color:#888780;"><span class="cmp-no">✗</span></td>
-</tr>
-<tr>
-  <td class="lbl">AI連携データ整形<br><small>PLやINVの生データ → LLMで変換 → 貼り付け。プロンプト内蔵・カスタマイズ保存可</small></td>
-  <td class="col-ex"><span class="cmp-yes">✓</span> API費用¥0<span class="cmp-uniq">独自</span></td>
-  <td><span class="cmp-no">✗</span></td>
-  <td><span class="cmp-no">✗</span></td>
-  <td><span class="cmp-no">✗</span></td>
-  <td style="color:#888780;"><span class="cmp-no">✗</span></td>
-</tr>
-<tr>
-  <td class="lbl">追加インポート<br><small>既存データに追記・再計算</small></td>
-  <td class="col-ex"><span class="cmp-yes">✓</span></td>
-  <td><span class="cmp-par">△</span></td>
-  <td><span class="cmp-no">✗</span></td>
-  <td><span class="cmp-par">△</span></td>
-  <td style="color:#888780;"><span class="cmp-no">✗</span></td>
-</tr>
-<tr>
-  <td class="lbl">画面上で直接編集<br><small>サイズ・重量をその場で変更 → 即再計算</small></td>
-  <td class="col-ex"><span class="cmp-yes">✓</span></td>
-  <td><span class="cmp-yes">✓</span></td>
-  <td><span class="cmp-par">△</span> 限定的</td>
-  <td><span class="cmp-par">△</span></td>
-  <td style="color:#888780;"><span class="cmp-yes">✓</span> これが現状</td>
 </tr>
 <tr><td class="cat" colspan="6">海上コンテナ特化 — 安全・重量管理</td></tr>
 <tr>
@@ -681,6 +640,47 @@ footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{co
   <td><span class="cmp-yes">✓</span></td>
   <td><span class="cmp-par">△</span></td>
   <td style="color:#888780;"><span class="cmp-par">△</span> 属人的</td>
+</tr>
+<tr><td class="cat" colspan="6">データ入力・取込フォーマット</td></tr>
+<tr>
+  <td class="lbl">Excel / CSV インポート<br><small>専用テンプレート（雛形）に入力して取込</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> 雛形DL機能あり</td>
+  <td><span class="cmp-yes">✓</span> 専用マクロDL必要</td>
+  <td><span class="cmp-yes">✓</span> 専用テンプレート必要</td>
+  <td><span class="cmp-yes">✓</span> システム連携</td>
+  <td style="color:#888780;"><span class="cmp-yes">✓</span> 独自雛形等</td>
+</tr>
+<tr>
+  <td class="lbl">テキスト貼り付け<br><small>指定フォーマット順のテキストを直接投入</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span> 専用フォーマットのみ</td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td style="color:#888780;"><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">AI連携データ整形<br><small>PLやINVの生データ → LLMで変換 → 貼り付け。プロンプト内蔵・カスタマイズ保存可</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span> API費用¥0<span class="cmp-uniq">独自</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td style="color:#888780;"><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">追加インポート<br><small>既存データに追記・再計算</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span></td>
+  <td><span class="cmp-no">✗</span></td>
+  <td><span class="cmp-par">△</span></td>
+  <td style="color:#888780;"><span class="cmp-no">✗</span></td>
+</tr>
+<tr>
+  <td class="lbl">画面上で直接編集<br><small>サイズ・重量をその場で変更 → 即再計算</small></td>
+  <td class="col-ex"><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-yes">✓</span></td>
+  <td><span class="cmp-par">△</span> 限定的</td>
+  <td><span class="cmp-par">△</span></td>
+  <td style="color:#888780;"><span class="cmp-yes">✓</span> これが現状</td>
 </tr>
 </tbody>
 </table>
