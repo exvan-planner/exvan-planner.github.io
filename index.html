@@ -3,630 +3,522 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ExVAN Planner — 海上コンテナ積付け最適化ソフト</title>
+<title>ExVAN Planner — 海上コンテナ専用の自動積付け・3D共有ソフト</title>
+<meta name="description" content="ExVAN Planner は、20F・40F・40HC の海上コンテナに特化した自動積付けソフト。積付けイメージを HTML ファイル1つで3D共有。外部通信なしのローカル動作。">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI','Meiryo','Hiragino Sans',sans-serif;line-height:1.8;overflow-x:hidden;}
-a{color:#58a6ff;text-decoration:none;}a:hover{text-decoration:underline;}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;width:100%;z-index:999;background:rgba(13,17,23,0.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(88,166,255,0.1);display:flex;justify-content:space-between;align-items:center;padding:0 40px;height:56px;}
-nav .logo{font-size:18px;font-weight:700;letter-spacing:1px;}
-nav .logo span{color:#58a6ff;}
-nav ul{list-style:none;display:flex;gap:22px;}
-nav ul li a{color:#8b949e;font-size:13px;transition:color .3s;}
-nav ul li a:hover{color:#58a6ff;text-decoration:none;}
-@media(max-width:768px){nav ul{display:none;}nav{padding:0 16px;}}
-
-/* COMMON */
-section{padding:90px 20px;}
-.container{max-width:1100px;margin:0 auto;}
-.section-title{text-align:center;font-size:clamp(22px,4vw,34px);font-weight:700;margin-bottom:12px;}
-.section-sub{text-align:center;color:#8b949e;font-size:14px;margin-bottom:50px;max-width:620px;margin-left:auto;margin-right:auto;}
-.fade-in{opacity:0;transform:translateY(25px);transition:opacity .7s,transform .7s;}
-.fade-in.visible{opacity:1;transform:translateY(0);}
-.btn{padding:13px 32px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .3s;display:inline-block;}
-.btn-primary{background:linear-gradient(135deg,#58a6ff,#3fb950);color:#0d1117;}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(88,166,255,0.3);text-decoration:none;}
-.btn-outline{background:transparent;border:1px solid #30363d;color:#e6edf3;}
-.btn-outline:hover{border-color:#58a6ff;color:#58a6ff;text-decoration:none;}
-.grad-div{height:1px;background:linear-gradient(90deg,transparent,rgba(88,166,255,0.15),transparent);margin:0 auto;max-width:800px;}
-
-/* ex-word のスタイル指定（グラデーションと中央寄せ） */
-.ex-word{
-  display:block;
-  text-align:center;
-  font-size:13px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  margin-top:6px;
-  margin-bottom:4px;
-  background:linear-gradient(135deg,#58a6ff,#3fb950);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  font-weight:600;
+:root{
+  --bg:#0a0d12; --bg2:#0e1218; --panel:#11161d; --line:#1d242e; --line2:#2a3340;
+  --ink:#e8edf2; --sub:#9aa5b1; --dim:#66717d;
+  --blue:#5aa2f5; --orange:#e8873a; --green:#46b25c; --red:#e5534b; --yellow:#d4a72c;
+  --mono:"SF Mono","Cascadia Mono",Consolas,"Menlo",monospace;
 }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;
+  line-height:1.85;letter-spacing:.02em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+.ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle}
+.mono{font-family:var(--mono);letter-spacing:.04em}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .8s,transform .8s}
+.fade-in.visible{opacity:1;transform:none}
 
-/* ============ HERO ============ */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;}
+/* nav */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;
+  background:rgba(10,13,18,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.04em;color:var(--ink)}
+nav .logo img{height:30px}
+nav .logo b{color:var(--blue);font-weight:700}
+nav ul{display:flex;gap:26px;list-style:none}
+nav ul a{color:var(--sub);font-size:13px}
+nav ul a:hover{color:var(--ink)}
+nav .cta{font-size:12.5px;padding:7px 14px;border:1px solid var(--line2);border-radius:3px;color:var(--ink)}
+nav .cta:hover{border-color:var(--blue)}
+@media(max-width:900px){nav ul{display:none}nav{padding:0 18px}}
 
-.hero-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;background:linear-gradient(180deg,rgba(13,17,23,0.55) 0%,rgba(13,17,23,0.7) 50%,rgba(13,17,23,0.92) 100%);}
-.hero-content{position:relative;z-index:3;text-align:center;padding:80px 20px 60px;}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:3px;font-size:14px;font-weight:600;letter-spacing:.05em;transition:.2s}
+.btn .ic{width:16px;height:16px}
+.btn-solid{background:var(--blue);color:#06121f}
+.btn-solid:hover{background:#7ab6f8}
+.btn-line{border:1px solid var(--line2);color:var(--ink)}
+.btn-line:hover{border-color:var(--ink)}
 
-/* ヒーローセクション用のブランドロゴ設定 */
-.hero-brand {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -50px;
-  margin-bottom: 32px;
-  font-size: clamp(28px, 5vw, 46px);
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-.hero-brand img {
-  height: clamp(40px, 6vw, 64px);
-  margin-right: 12px;
-}
-.hero-brand .brand-highlight {
-  color: #58a6ff;
-}
+/* section heading (editorial) */
+.sec{padding:110px 0;border-top:1px solid var(--line)}
+.sec-hd{display:grid;grid-template-columns:200px 1fr;gap:28px;margin-bottom:56px}
+.sec-hd .no{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.12em;padding-top:12px;border-top:1px solid var(--line2)}
+.sec-hd .no b{display:block;color:var(--orange);font-weight:400;font-size:12px}
+.sec-hd h2{font-size:clamp(26px,3.6vw,40px);line-height:1.35;font-weight:700;letter-spacing:.03em}
+.sec-hd p{color:var(--sub);margin-top:14px;max-width:640px;font-size:15px}
+@media(max-width:800px){.sec-hd{grid-template-columns:1fr;gap:12px}.sec{padding:80px 0}}
 
-.hero-badge{display:inline-block;margin-bottom:20px;padding:5px 14px;border-radius:16px;border:1px solid rgba(63,185,80,0.3);font-size:11px;color:#3fb950;letter-spacing:1px;}
-.hero-content h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.25;margin-bottom:16px;}
-.hero-content h1 .gr{background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero-content .tl{font-size:clamp(14px,2vw,18px);color:#8b949e;max-width:580px;margin:0 auto 8px;}
-.hero-content .tl2{font-size:13px;color:#6e7681;margin-bottom:32px;}
-.hero-content .cta-group{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
-#hero-stats{position:absolute;top:70px;right:24px;z-index:3;background:rgba(13,17,23,0.7);backdrop-filter:blur(8px);border:1px solid rgba(88,166,255,0.12);border-radius:10px;padding:14px 18px;min-width:160px;font-size:12px;}
-#hero-stats .hs-row{display:flex;justify-content:space-between;padding:2px 0;}
-#hero-stats .hs-l{color:#6e7681;}
-#hero-stats .hs-v{color:#e6edf3;font-weight:600;}
-#hero-stats .hs-big{font-size:20px;color:#3fb950;}
-#hero-stats .bar-bg{background:#21262d;border-radius:3px;height:4px;margin-top:6px;}
-#hero-stats .bar{height:4px;border-radius:3px;background:linear-gradient(90deg,#58a6ff,#3fb950);width:0%;transition:width .4s;}
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden;background:#06080b}
+.hero-bg{position:absolute;inset:0;background:url(hero_yard.jpg) 70% center/cover no-repeat;opacity:.38;filter:saturate(.55) contrast(1.05)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,8,11,.92) 0%,rgba(6,8,11,.55) 50%,rgba(6,8,11,.2) 100%),linear-gradient(180deg,rgba(6,8,11,0) 55%,var(--bg) 100%)}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-bottom:90px;padding-top:140px}
+.hero .tag{font-family:var(--mono);font-size:11.5px;color:var(--sub);letter-spacing:.18em;display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.hero .tag::before{content:"";width:36px;height:1px;background:var(--orange)}
+.hero h1{font-size:clamp(34px,5.6vw,68px);line-height:1.22;font-weight:800;letter-spacing:.02em;max-width:900px}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero .lead{max-width:640px;margin-top:26px;color:#c3ccd5;font-size:clamp(15px,1.5vw,17px)}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+.hero .facts{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:0;margin-top:64px;border-top:1px solid var(--line2)}
+.hero .facts div{padding:16px 36px 0 0;margin-right:36px;font-size:13px;color:var(--sub);border-right:1px solid var(--line)}
+.hero .facts div:last-child{border:none}
+.hero .facts b{display:block;font-family:var(--mono);font-size:11px;color:var(--dim);font-weight:400;letter-spacing:.12em}
+@media(max-width:800px){.hero .facts{grid-template-columns:1fr 1fr;gap:14px 0}.hero .facts div{border:none;padding-right:10px;margin-right:0}}
 
-/* スマホ画面（幅768px以下）の時はステータス表示を消す */
-@media (max-width: 768px) {
-  #hero-stats {
-    min-width:130px;padding:10px 12px;font-size:11px;
-  }
-}
+/* 01 WHAT (3D background) */
+.what{position:relative;min-height:760px;border-top:1px solid var(--line);overflow:hidden;background:radial-gradient(ellipse at 70% 55%,#111a26 0%,var(--bg) 65%)}
+.what canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+.what::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,var(--bg) 0%,rgba(10,13,18,.88) 30%,rgba(10,13,18,0) 62%)}
+.what .wrap{position:relative;z-index:2;padding-top:110px;padding-bottom:110px;pointer-events:none}
+.what .wrap *{pointer-events:auto}
+.what .txt{max-width:520px}
+.what .steps{margin-top:40px;border-top:1px solid var(--line2)}
+.what .steps li{list-style:none;display:grid;grid-template-columns:54px 1fr;gap:6px;padding:18px 0;border-bottom:1px solid var(--line)}
+.what .steps .n{font-family:var(--mono);color:var(--orange);font-size:13px;padding-top:3px}
+.what .steps h3{font-size:17px;letter-spacing:.04em}
+.what .steps p{color:var(--sub);font-size:13.5px}
+#hero-stats{position:absolute;z-index:3;right:32px;top:96px;background:rgba(10,13,18,.78);border:1px solid var(--line2);border-radius:3px;padding:14px 18px;min-width:190px;font-size:12px;backdrop-filter:blur(6px)}
+#hero-stats .hd{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.14em;margin-bottom:6px}
+#hero-stats .hs-row{display:flex;justify-content:space-between;padding:2px 0}
+#hero-stats .hs-l{color:var(--dim)}
+#hero-stats .hs-v{font-family:var(--mono);color:var(--ink)}
+#hero-stats .hs-big{color:var(--green);font-size:18px}
+#hero-stats .bar-bg{background:var(--line);height:3px;margin-top:8px}
+#hero-stats .bar{height:3px;background:var(--green);width:0;transition:width .4s}
+.what .cap{position:absolute;z-index:3;right:32px;bottom:26px;font-family:var(--mono);font-size:11px;color:var(--dim);display:flex;gap:8px;align-items:center}
+.what .cap .ic{width:14px;height:14px}
+.statline{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.statline div{padding:28px 32px;border-right:1px solid var(--line)}
+.statline div:last-child{border:none}
+.statline b{display:block;font-family:var(--mono);font-size:clamp(26px,3.4vw,38px);font-weight:500;color:var(--ink);letter-spacing:0}
+.statline span{font-size:12.5px;color:var(--sub)}
+@media(max-width:800px){.what::before{background:linear-gradient(180deg,rgba(10,13,18,.92) 0%,rgba(10,13,18,.75) 55%,rgba(10,13,18,.2) 100%)}#hero-stats{top:auto;bottom:60px;right:20px;min-width:150px}.statline{grid-template-columns:1fr 1fr}.statline div:nth-child(2){border-right:none}.statline div{border-bottom:1px solid var(--line)}}
 
-/* ============ PROMISE ============ */
-.promise{background:#0d1117;}
-.promise-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;}
-.promise-card{background:rgba(20,25,40,0.6);border:1px solid #21262d;border-radius:14px;padding:32px 24px;text-align:center;transition:border-color .3s,transform .3s;}
-.promise-card:hover{border-color:#3fb950;transform:translateY(-3px);}
-.promise-card .p-icon{font-size:36px;margin-bottom:14px;}
-.promise-card h3{font-size:18px;margin-bottom:10px;}
-.promise-card p{font-size:13px;color:#8b949e;}
+/* feature blocks */
+.feat{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start;padding:64px 0;border-top:1px solid var(--line)}
+.feat:first-of-type{border-top:none;padding-top:0}
+.feat.rev{grid-template-columns:7fr 5fr}
+.feat.rev .ftxt{order:2}
+.ftxt .k{font-family:var(--mono);font-size:11.5px;color:var(--dim);letter-spacing:.14em;margin-bottom:12px;display:flex;gap:10px;align-items:center}
+.ftxt .k .new{color:#0a0d12;background:var(--orange);padding:1px 8px;border-radius:2px;letter-spacing:.1em;font-weight:700}
+.ftxt h3{font-size:clamp(21px,2.4vw,27px);line-height:1.45;letter-spacing:.03em;margin-bottom:16px}
+.ftxt p{color:var(--sub);font-size:14.5px}
+.ftxt ul{list-style:none;margin-top:18px;border-top:1px solid var(--line)}
+.ftxt ul li{padding:10px 0 10px 22px;border-bottom:1px solid var(--line);font-size:14px;color:#cdd5dd;position:relative}
+.ftxt ul li::before{content:"";position:absolute;left:2px;top:20px;width:9px;height:1px;background:var(--orange)}
+.shot{border:1px solid var(--line2);border-radius:3px;overflow:hidden;background:#000}
+.shot img{width:100%;height:auto}
+figure figcaption{font-size:12px;color:var(--dim);margin-top:10px;font-family:var(--mono);letter-spacing:.02em}
+figure figcaption b{color:var(--sub);font-weight:400}
+.shots2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.feat,.feat.rev{grid-template-columns:1fr;gap:28px}.feat.rev .ftxt{order:0}.shots2{grid-template-columns:1fr}}
 
-/* PROBLEMS */
-.problems{background:#161b22;}
-.prob-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
-.prob-card{background:rgba(30,35,50,0.5);border:1px solid #21262d;border-radius:12px;padding:24px 20px;transition:border-color .3s,transform .3s;}
-.prob-card:hover{border-color:#da3633;transform:translateY(-3px);}
-.prob-card .icon{font-size:26px;margin-bottom:10px;}
-.prob-card h4{font-size:15px;margin-bottom:6px;}
-.prob-card p{font-size:12px;color:#8b949e;}
+/* engines table */
+.engines{margin-top:8px;border-top:1px solid var(--line2)}
+.eng{display:grid;grid-template-columns:150px 1fr 220px;gap:28px;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}
+.eng .nm{font-family:var(--mono);font-size:13px;color:var(--ink);letter-spacing:.08em}
+.eng .nm small{display:block;color:var(--dim);font-size:11px;letter-spacing:.04em;margin-top:2px;font-family:inherit}
+.eng h4{font-size:16px;letter-spacing:.03em;margin-bottom:4px}
+.eng p{font-size:13.5px;color:var(--sub)}
+.eng .th{border:1px solid var(--line2);border-radius:2px;overflow:hidden;background:#000}
+.eng .th img{width:100%;height:118px;object-fit:cover;object-position:center 30%}
+.eng .th.blank{height:118px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:11px;font-family:var(--mono)}
+@media(max-width:800px){.eng{grid-template-columns:1fr;gap:10px}}
 
-/* ENGINES */
-.engines{background:#0d1117;}
-.eng-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
-.eng-card{background:rgba(20,25,40,0.6);border:1px solid #21262d;border-radius:14px;padding:32px 24px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
-.eng-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.eng-card.kata::before{background:linear-gradient(90deg,#f0883e,#db6d28);}
-.eng-card.bunsan::before{background:linear-gradient(90deg,#58a6ff,#3fb950);}
-.eng-card.anzen::before{background:linear-gradient(90deg,#a371f7,#8957e5);}
-.eng-card:hover{border-color:#58a6ff;transform:translateY(-3px);}
-.eng-card .e-icon{font-size:36px;margin-bottom:12px;}
-.eng-card .e-name{font-size:12px;color:#58a6ff;letter-spacing:1px;margin-bottom:4px;}
-.eng-card .e-q{font-size:18px;font-weight:700;margin-bottom:8px;}
-.eng-card p{font-size:13px;color:#8b949e;}
+/* AI flow */
+.aiflow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch;margin-top:6px}
+.aiflow .bx{border:1px solid var(--line2);border-radius:3px;padding:18px;background:var(--bg2)}
+.aiflow .bx .mono{font-size:11px;color:var(--dim);letter-spacing:.12em;display:block;margin-bottom:8px}
+.aiflow .bx h5{font-size:15px;margin-bottom:6px}
+.aiflow .bx p{font-size:12.5px;color:var(--sub);line-height:1.7}
+.aiflow .bx.hl{border-color:rgba(90,162,245,.5)}
+.aiflow .ar{display:flex;align-items:center;color:var(--dim)}
+.raw{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.6;white-space:pre;overflow:hidden}
+@media(max-width:900px){.aiflow{grid-template-columns:1fr}.aiflow .ar{justify-content:center;transform:rotate(90deg)}}
 
-/* BA */
-.ba{background:#161b22;}
-.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:880px;margin:0 auto;}
-@media(max-width:700px){.ba-grid{grid-template-columns:1fr;}}
-.ba-card{border-radius:14px;padding:28px 24px;}
-.ba-card.before{background:rgba(218,54,51,0.05);border:1px solid rgba(218,54,51,0.18);}
-.ba-card.after{background:rgba(63,185,80,0.05);border:1px solid rgba(63,185,80,0.18);}
-.ba-card h3{font-size:16px;margin-bottom:16px;}
-.ba-card.before h3{color:#f85149;}.ba-card.after h3{color:#3fb950;}
-.ba-card ul{list-style:none;padding:0;}
-.ba-card ul li{padding:6px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03);}
-.ba-card.before ul li::before{content:'✕ ';color:#f85149;}
-.ba-card.after ul li::before{content:'✓ ';color:#3fb950;}
+/* KEY FEATURE */
+.key{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:100px 0}
+.key .grid{display:grid;grid-template-columns:6fr 6fr;gap:56px;align-items:center}
+.key .k{font-family:var(--mono);font-size:12px;color:var(--orange);letter-spacing:.2em;margin-bottom:16px}
+.key h3{font-size:clamp(24px,2.5vw,32px);line-height:1.4;letter-spacing:.02em;margin-bottom:20px}
+.key p{color:var(--sub)}
+.key ul{list-style:none;margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.key ul li{padding:10px 0;border-top:1px solid var(--line);font-size:13.5px;color:#cdd5dd;display:flex;gap:10px;align-items:flex-start}
+.key ul li .ic{width:16px;height:16px;color:var(--blue);margin-top:4px}
+.demo{position:relative;aspect-ratio:16/10;border:1px solid var(--line2);border-radius:3px;overflow:hidden;background:#05070a}
+.demo iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.demo .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;
+  background:linear-gradient(rgba(5,7,10,.55),rgba(5,7,10,.75)),url(ss_bunsan.png) center/cover}
+.demo .ph span{font-family:var(--mono);font-size:11px;color:var(--sub);letter-spacing:.1em}
+.demo .ph .play{width:64px;height:64px;border-radius:50%;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.demo .ph .play .ic{width:22px;height:22px;fill:var(--ink)}
+.key .links{display:flex;gap:18px;margin-top:14px;font-size:13px}
+@media(max-width:900px){.key .grid{grid-template-columns:1fr}.key ul{grid-template-columns:1fr}}
 
-/* TARGETS */
-.targets{background:#0d1117;}
-.tgt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
-.tgt-card{background:rgba(30,35,50,0.4);border:1px solid #21262d;border-radius:12px;padding:22px 18px;transition:border-color .3s,transform .3s;}
-.tgt-card:hover{border-color:#3fb950;transform:translateY(-3px);}
-.tgt-card .t-icon{font-size:28px;margin-bottom:8px;}
-.tgt-card h4{font-size:14px;margin-bottom:6px;}
-.tgt-card p{font-size:12px;color:#8b949e;}
-.tgt-card .t-quote{font-size:12px;color:#58a6ff;margin-top:8px;font-style:italic;}
+/* misc list */
+.mlist{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line2);margin-top:20px}
+.mlist div{padding:22px 24px 22px 0;border-bottom:1px solid var(--line)}
+.mlist h5{font-size:15px;margin-bottom:6px;display:flex;gap:10px;align-items:center}
+.mlist h5 .ic{color:var(--blue);width:18px;height:18px}
+.mlist p{font-size:13px;color:var(--sub)}
+@media(max-width:900px){.mlist{grid-template-columns:1fr}}
+.acc-wrap{margin-top:48px}
+.acc-title{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.14em;margin-bottom:12px}
+.acc-item{border-top:1px solid var(--line)}
+.acc-item:last-child{border-bottom:1px solid var(--line)}
+.acc-hd{padding:16px 4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14.5px;font-weight:600}
+.acc-hd:hover{color:var(--blue)}
+.acc-hd .lbl{display:flex;gap:12px;align-items:center}
+.acc-hd .lbl .ic{width:18px;height:18px;color:var(--sub)}
+.acc-hd .aw{font-size:10px;color:var(--dim);transition:transform .3s}
+.acc-item.open .aw{transform:rotate(90deg)}
+.acc-bd{max-height:0;overflow:hidden;transition:max-height .4s}
+.acc-item.open .acc-bd{max-height:900px}
+.acc-bd ul{list-style:none;padding:0 0 16px 34px;columns:2;column-gap:32px}
+.acc-bd li{font-size:13px;color:var(--sub);padding:4px 0;break-inside:avoid}
+@media(max-width:800px){.acc-bd ul{columns:1}}
+.sig{display:inline-flex;gap:3px;vertical-align:middle;margin:0 3px}
+.sig i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.sig .g{background:var(--green)}.sig .y{background:var(--yellow)}.sig .r{background:var(--red)}
 
-/* FEATURES 5 */
-.f5{background:#161b22;}
-.f5-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
-.f5-card{background:rgba(30,35,50,0.45);border:1px solid #21262d;border-radius:12px;padding:28px 24px;transition:border-color .3s,transform .3s;}
-.f5-card:hover{border-color:#58a6ff;transform:translateY(-3px);}
-.f5-card .fi{font-size:32px;margin-bottom:12px;}
-.f5-card h4{font-size:16px;margin-bottom:6px;}
-.f5-card p{font-size:12px;color:#8b949e;}
-.f5-card .tag{display:inline-block;margin-top:10px;padding:2px 8px;border-radius:10px;font-size:10px;background:rgba(88,166,255,0.1);color:#58a6ff;}
+/* merits */
+.ba{border-top:1px solid var(--line2)}
+.ba-row{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;border-bottom:1px solid var(--line)}
+.ba-row div{padding:15px 0;font-size:14px}
+.ba-row .b{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(229,83,75,.5)}
+.ba-row .a{color:var(--ink)}
+.ba-row .ar{color:var(--orange);text-align:center}
+.ba-hd div{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.14em;text-decoration:none!important}
+.scenes{margin-top:72px;display:grid;grid-template-columns:repeat(2,1fr);gap:0 48px;border-top:1px solid var(--line2)}
+.scene{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:22px 0;border-bottom:1px solid var(--line)}
+.scene .ic{width:22px;height:22px;color:var(--sub);margin-top:4px}
+.scene h4{font-size:15.5px;letter-spacing:.04em}
+.scene h4 small{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-left:10px;letter-spacing:.12em;font-weight:400}
+.scene p{font-size:13.5px;color:var(--sub);margin-top:2px}
+.scene q{display:block;font-size:13px;color:#c8d2dc;margin-top:8px;padding-left:12px;border-left:2px solid var(--orange);quotes:none}
+@media(max-width:800px){.scenes{grid-template-columns:1fr}.ba-row{grid-template-columns:1fr 24px 1fr}.ba-row div{font-size:12.5px}}
 
-/* ACCORDION */
-.accord{background:#0d1117;}
-.acc-item{border:1px solid #21262d;border-radius:10px;margin-bottom:10px;overflow:hidden;}
-.acc-hd{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:rgba(30,35,50,0.35);transition:background .3s;font-size:14px;font-weight:600;}
-.acc-hd:hover{background:rgba(88,166,255,0.05);}
-.acc-hd .aw{transition:transform .3s;font-size:12px;color:#58a6ff;}
-.acc-item.open .acc-hd .aw{transform:rotate(90deg);}
-.acc-bd{max-height:0;overflow:hidden;transition:max-height .4s;padding:0 20px;}
-.acc-item.open .acc-bd{max-height:900px;padding:0 20px 16px;}
-.acc-bd ul{list-style:none;padding:0;}
-.acc-bd ul li{padding:5px 0;font-size:12px;color:#8b949e;border-bottom:1px solid rgba(255,255,255,0.02);}
-.acc-bd ul li::before{content:'• ';color:#58a6ff;}
+/* security */
+.secu{background:#06080b}
+.secu .big{font-size:clamp(34px,5.4vw,70px);font-weight:800;line-height:1.15;letter-spacing:.02em}
+.secu .big span{color:var(--dim)}
+.secu .intro{max-width:640px;color:var(--sub);margin-top:26px;font-size:15.5px}
+.secu .pts{display:grid;grid-template-columns:repeat(4,1fr);margin-top:64px;border-top:1px solid var(--line2)}
+.secu .pts div{padding:26px 26px 26px 0;border-right:1px solid var(--line);margin-right:26px}
+.secu .pts div:last-child{border:none;margin-right:0}
+.secu .pts .ic{width:24px;height:24px;color:var(--green);margin-bottom:14px}
+.secu .pts h4{font-size:16px;margin-bottom:6px}
+.secu .pts p{font-size:13px;color:var(--sub)}
+.secu .note{margin-top:28px;font-size:12px;color:var(--dim)}
+@media(max-width:900px){.secu .pts{grid-template-columns:1fr 1fr}.secu .pts div{border:none}}
 
-/* PHILOSOPHY */
-.philosophy{background:#161b22;}
-.phil-box{max-width:700px;margin:0 auto;text-align:center;background:linear-gradient(135deg,rgba(88,166,255,0.04),rgba(63,185,80,0.04));border:1px solid #21262d;border-radius:16px;padding:48px 36px;}
-.phil-box .phil-q{font-size:clamp(20px,3.5vw,28px);font-weight:700;margin-bottom:24px;line-height:1.4;}
-.phil-box .phil-q .gr{background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.phil-list{text-align:left;max-width:420px;margin:0 auto;}
-.phil-list li{padding:6px 0;font-size:14px;color:#8b949e;list-style:none;}
-.phil-list li::before{content:'— ';color:#3fb950;}
+/* flow + video */
+.flow4{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line2);margin-bottom:64px}
+.flow4 div{padding:22px 24px 22px 0}
+.flow4 .n{font-family:var(--mono);color:var(--orange);font-size:12px}
+.flow4 h4{font-size:15.5px;margin:6px 0 4px}
+.flow4 p{font-size:13px;color:var(--sub)}
+@media(max-width:800px){.flow4{grid-template-columns:1fr 1fr}}
+.video{position:relative;padding-bottom:56.25%;border:1px solid var(--line2);border-radius:3px;overflow:hidden}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
-/* SECURITY */
-.security{background:#0d1117;}
-.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;max-width:800px;margin:0 auto;}
-.sec-card{text-align:center;padding:24px 18px;}
-.sec-card .s-icon{font-size:32px;margin-bottom:10px;}
-.sec-card h4{font-size:15px;margin-bottom:6px;}
-.sec-card p{font-size:12px;color:#8b949e;}
+/* comparison (existing table restyled) */
+.cmp-wrap{overflow-x:auto}
+.cmp-table{width:100%;border-collapse:collapse;min-width:720px}
+.cmp-table th,.cmp-table td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:12.5px;text-align:center;vertical-align:middle;line-height:1.5}
+.cmp-table th{font-weight:600;font-size:11.5px;color:var(--sub);border-bottom:1px solid var(--line2)}
+.cmp-table td.lbl{text-align:left;color:var(--ink);font-size:13px}
+.cmp-table td.lbl small{display:block;font-size:11px;color:var(--dim)}
+.cmp-table td.cat{text-align:left;font-family:var(--mono);font-size:11px;color:var(--orange);padding:22px 0 8px;letter-spacing:.1em;border-bottom:1px solid var(--line2)}
+.col-ex{background:rgba(90,162,245,.06)!important}
+th.col-ex{color:var(--blue)!important}
+.cmp-yes{color:var(--green);font-weight:700}
+.cmp-no{color:var(--red)}
+.cmp-par{color:var(--yellow)}
+.cmp-foot{font-size:11.5px;color:var(--dim);margin-top:18px;line-height:1.9}
 
-/* COMPARISON TABLE */
-.comparison{background:#0d1117;}
-.cmp-wrap{overflow-x:auto;}
-.cmp-table{width:100%;border-collapse:collapse;min-width:720px;}
-.cmp-table th,.cmp-table td{padding:9px 12px;border:1px solid #21262d;font-size:12px;text-align:center;vertical-align:middle;line-height:1.4;}
-.cmp-table th{font-weight:600;font-size:11px;color:#8b949e;background:#161b22;}
-.cmp-table td.lbl{text-align:left;background:#161b22;color:#e6edf3;font-size:12px;padding-left:14px;}
-.cmp-table td.lbl small{display:block;font-size:10px;color:#6e7681;margin-top:1px;}
-.cmp-table td.cat{text-align:left;font-size:11px;font-weight:700;color:#58a6ff;background:#0d1117;padding:6px 14px;letter-spacing:0.5px;border-left:3px solid #58a6ff;}
-.col-ex{background:rgba(88,166,255,0.07)!important;}
-th.col-ex{color:#58a6ff!important;font-size:12px;}
-.cmp-yes{color:#3fb950;font-size:15px;font-weight:700;}
-.cmp-no{color:#f85149;font-size:15px;}
-.cmp-par{color:#e3b341;font-size:12px;}
-.cmp-foot{font-size:11px;color:#6e7681;margin-top:16px;line-height:1.8;}
+/* contact */
+.beta-note{max-width:760px;color:var(--sub);font-size:14px}
+.beta-note strong{color:var(--ink)}
+.beta-chips{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 32px}
+.beta-chips div{border:1px solid var(--line2);border-radius:2px;padding:6px 12px;font-size:12px;color:var(--sub);display:flex;gap:8px;align-items:center}
+.beta-chips .ic{width:15px;height:15px;color:var(--blue)}
+.form-wrap{max-width:760px;border:1px solid var(--line2);border-radius:3px;overflow:hidden;background:var(--bg2)}
+.form-wrap iframe{display:block;width:100%;height:720px;border:0;background:transparent}
+.form-wrap .fnote{text-align:center;padding:12px;font-size:11px;color:var(--dim);border-top:1px solid var(--line)}
 
-/* FLOW */
-.flow{background:#161b22;}
-.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;}
-.flow-step{background:rgba(30,35,50,0.35);border:1px solid #21262d;border-radius:12px;padding:28px 20px;text-align:center;transition:border-color .3s,transform .3s;}
-.flow-step:hover{border-color:#58a6ff;transform:translateY(-3px);}
-.flow-step .sn{display:inline-block;width:36px;height:36px;line-height:36px;border-radius:50%;font-weight:700;font-size:15px;background:linear-gradient(135deg,#58a6ff,#3fb950);color:#0d1117;margin-bottom:14px;}
-.flow-step .si{font-size:28px;margin-bottom:10px;}
-.flow-step h4{font-size:14px;margin-bottom:6px;}
-.flow-step p{font-size:12px;color:#8b949e;}
-
-/* STATS */
-.stats-sec{background:#161b22;}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;text-align:center;}
-.stat-item .sn{font-size:clamp(32px,5vw,48px);font-weight:800;background:linear-gradient(135deg,#58a6ff,#3fb950);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.stat-item .sl{font-size:13px;color:#8b949e;margin-top:2px;}
-
-/* CONTACT */
-.contact{background:#161b22;}
-.contact-inner{max-width:560px;margin:0 auto;background:rgba(30,35,50,0.45);border:1px solid #21262d;border-radius:14px;padding:40px 32px;}
-.contact-inner .email-box{text-align:center;margin-bottom:28px;padding:16px;background:rgba(88,166,255,0.04);border-radius:8px;}
-.contact-inner .email-box span{font-size:18px;color:#58a6ff;font-weight:600;}
-.fg{margin-bottom:16px;}
-.fg label{display:block;font-size:12px;color:#8b949e;margin-bottom:4px;}
-.fg input,.fg textarea{width:100%;padding:10px 14px;background:#0d1117;border:1px solid #30363d;border-radius:7px;color:#e6edf3;font-size:13px;font-family:inherit;transition:border-color .3s;}
-.fg input:focus,.fg textarea:focus{outline:none;border-color:#58a6ff;}
-.fg textarea{height:100px;resize:vertical;}
-.form-submit{text-align:center;margin-top:20px;}
-
-footer{background:#010409;border-top:1px solid #21262d;padding:32px 20px;text-align:center;}
-footer p{font-size:11px;color:#484f58;}footer a{color:#484f58;}footer a:hover{color:#58a6ff;}
-
-/* Slide-in Panel */
-.slide-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s;}
-.slide-overlay.active{opacity:1;pointer-events:auto;}
-.slide-panel{position:fixed;top:0;right:-76vw;width:min(75vw,1100px);height:100%;background:#161b22;border-left:1px solid #21262d;z-index:1001;transition:right .35s ease;overflow-y:auto;padding:0;}
-.slide-panel.active{right:0;}
-.slide-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid #21262d;position:sticky;top:0;background:#161b22;z-index:2;}
-.slide-header h3{font-size:16px;color:#58a6ff;}
-.slide-close{background:none;border:1px solid #30363d;color:#8b949e;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer;transition:all .2s;}
-.slide-close:hover{border-color:#58a6ff;color:#58a6ff;}
-.slide-body{padding:0;}
-.slide-img-placeholder{width:100%;aspect-ratio:16/10;background:#0d1117;border:2px dashed #30363d;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:20px;color:#484f58;font-size:13px;gap:8px;position:relative;}
-.slide-img-placeholder .ph-icon{font-size:40px;opacity:0.4;}
-.slide-highlight{margin-bottom:16px;}
-.slide-highlight .hl-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
-.slide-highlight .hl-box{min-width:28px;height:28px;border:2px solid #58a6ff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#58a6ff;font-weight:700;}
-.slide-highlight .hl-text{font-size:13px;color:#8b949e;}
-.slide-highlight .hl-text strong{color:#e6edf3;display:block;margin-bottom:2px;font-size:14px;}
-.slide-cta{text-align:center;margin-top:20px;padding:16px;background:rgba(88,166,255,0.04);border-radius:8px;font-size:12px;color:#6e7681;}
-
-/* Slide panel — screenshot highlight viewer */
-.slide-img-wrap{position:relative;width:100%;border-radius:0;overflow:hidden;margin-bottom:0;}
-.slide-img{width:100%;height:auto;display:block;}
-.slide-highlight{padding:16px 24px 0;}
-.slide-cta{margin:0 24px 24px;}
-.slide-ov{position:absolute;background:rgba(0,0,0,0.65);pointer-events:none;transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease;}
-.slide-hl-frame{position:absolute;pointer-events:none;border:2px solid #58a6ff;border-radius:2px;transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease,border-color .35s ease;animation:hl-pulse-frame 1.5s ease-in-out infinite;}
-@keyframes hl-pulse-frame{0%,100%{opacity:1;}50%{opacity:0.35;}}
-
-[data-slide]{cursor:pointer;}
-[data-slide]:hover{border-color:#58a6ff !important;}
-
-
-/* ===== refined theme ===== */
-body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;letter-spacing:.02em;-webkit-font-smoothing:antialiased;}
-.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle;}
-.ibox{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:10px;color:#79b8ff;
-  background:linear-gradient(145deg,rgba(88,166,255,0.10),rgba(63,185,80,0.06));border:1px solid rgba(88,166,255,0.22);margin-bottom:16px;}
-.ibox .ic{width:22px;height:22px;}
-.ibox.sm{width:38px;height:38px;border-radius:9px;margin-bottom:12px;}
-.ibox.sm .ic{width:19px;height:19px;}
-.prob-card .ibox{color:#ff9492;background:rgba(248,81,73,0.06);border-color:rgba(248,81,73,0.22);}
-.sig{display:inline-flex;gap:3px;vertical-align:middle;margin:0 3px;}
-.sig i{display:inline-block;width:8px;height:8px;border-radius:50%;}
-.sig .g{background:#3fb950}.sig .y{background:#d29922}.sig .r{background:#f85149}
-.section-title{letter-spacing:.06em;font-weight:700;}
-.ex-word{font-size:11px;letter-spacing:.32em;margin-top:2px;margin-bottom:10px;}
-.section-sub{font-size:14px;color:#8b949e;letter-spacing:.04em;}
-.promise-card,.prob-card,.eng-card,.tgt-card,.f5-card,.flow-step{border-radius:12px;background:linear-gradient(180deg,rgba(22,27,34,0.85),rgba(13,17,23,0.85));border-color:#232a33;}
-.promise-card:hover,.prob-card:hover,.eng-card:hover,.tgt-card:hover,.f5-card:hover,.flow-step:hover{transform:none;border-color:rgba(88,166,255,0.45);box-shadow:0 10px 30px rgba(0,0,0,0.25);}
-.promise-card{text-align:left;}
-.promise-card h3,.eng-card .e-q,.f5-card h4{letter-spacing:.04em;}
-.mini-list{list-style:none;padding:0;margin-top:12px;font-size:12px;color:#8b949e;}
-.mini-list li{display:flex;align-items:center;gap:8px;padding:4px 0;border-top:1px solid rgba(255,255,255,0.04);}
-.mini-list .ic{width:15px;height:15px;color:#58a6ff;}
-.btn{letter-spacing:.06em;border-radius:6px;}
-.btn .ic{width:16px;height:16px;margin-left:6px;}
-.btn-primary{background:linear-gradient(135deg,#4c9aff,#2ea043);color:#fff;}
-.acc-hd .lbl{display:flex;align-items:center;gap:12px;}
-.acc-hd .lbl .ic{width:18px;height:18px;color:#58a6ff;}
-.sec-card .ibox{margin-bottom:12px;}
-.flow-step .ibox{margin:4px auto 14px;}
-.sec-card,.flow-step{text-align:center;}
-.beta-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.beta-chips div{background:rgba(255,255,255,0.03);border:1px solid #21262d;border-radius:8px;padding:12px;text-align:center;font-size:11px;color:#8b949e;}
-.beta-chips .ic{display:block;margin:0 auto 6px;color:#79b8ff;width:18px;height:18px;}
-
-/* ===== HERO (photo) ===== */
-.hero{min-height:100vh;align-items:stretch;background:#05080d url(hero_yard.jpg) center/cover no-repeat;}
-.hero-overlay{background:linear-gradient(90deg,rgba(5,8,13,0.92) 0%,rgba(5,8,13,0.72) 38%,rgba(5,8,13,0.15) 70%,rgba(5,8,13,0.05) 100%),linear-gradient(180deg,rgba(5,8,13,0) 60%,rgba(13,17,23,1) 100%);}
-.hero-content{text-align:left;max-width:1100px;width:100%;margin:0 auto;padding:120px 32px 90px;}
-.hero-brand{justify-content:flex-start;margin-top:0;margin-bottom:28px;font-size:clamp(24px,3.4vw,34px);}
-.hero-brand img{height:clamp(34px,4.4vw,48px);}
-.hero-badge{border-color:rgba(121,184,255,0.35);color:#79b8ff;letter-spacing:.22em;font-size:10.5px;padding:6px 14px;border-radius:4px;text-transform:uppercase;}
-.hero-content h1{font-size:clamp(32px,5.4vw,60px);letter-spacing:.04em;line-height:1.22;text-shadow:0 2px 24px rgba(0,0,0,0.45);}
-.hero-content .tl{margin:0 0 8px;color:#c9d1d9;max-width:560px;}
-.hero-content .tl2{color:#8b949e;}
-.hero-content .cta-group{justify-content:flex-start;}
-.hero-scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;color:#8b949e;font-size:10px;letter-spacing:.3em;text-align:center}
-.hero-scroll::after{content:"";display:block;width:1px;height:34px;margin:8px auto 0;background:linear-gradient(#58a6ff,transparent);}
-@media(max-width:768px){.hero{background-position:68% center}.hero-overlay{background:linear-gradient(180deg,rgba(5,8,13,0.55),rgba(5,8,13,0.85) 60%,#0d1117)}.hero-content{padding:110px 22px 80px}}
-
-/* ===== LIVE 3D ===== */
-.promise-grid{grid-template-columns:repeat(2,1fr);}
-@media(max-width:760px){.promise-grid{grid-template-columns:1fr;}}
-.flow-step .ibox{display:flex;}
-.hero-content .tl{max-width:640px;}
-.live3d{background:#0d1117;padding-top:70px;}
-.live3d-frame{position:relative;height:clamp(360px,52vw,560px);border-radius:14px;overflow:hidden;border:1px solid #232a33;
-  background:radial-gradient(ellipse at 60% 40%,#121a26,#0b0f15 70%);box-shadow:0 30px 80px rgba(0,0,0,0.35);}
-.live3d-frame canvas{display:block;width:100%;height:100%;cursor:grab;}
-.live3d-frame #hero-stats{top:18px;right:18px;}
-.live3d-cap{position:absolute;left:18px;bottom:14px;font-size:11px;color:#6e7681;letter-spacing:.08em;display:flex;align-items:center;gap:6px;z-index:3}
-.live3d-cap .ic{width:14px;height:14px;}
+/* other software */
+.others{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2)}
+.others a{display:block;padding:24px 24px 24px 0;border-bottom:1px solid var(--line);color:var(--ink)}
+.others a:hover h4{color:var(--blue)}
+.others h4{font-size:16px;transition:.2s}
+.others h4 small{font-family:var(--mono);font-size:10.5px;color:var(--green);margin-left:10px;font-weight:400;letter-spacing:.08em}
+.others p{font-size:13px;color:var(--sub);margin-top:4px}
+.others .u{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:8px}
+@media(max-width:800px){.others{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--line);padding:36px 0;font-size:11.5px;color:var(--dim)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--dim)}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-shieldcheck" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></symbol><symbol id="i-box" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol><symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3 8.7 2.7a1 1 0 0 0-1.4 0L2.7 7.3a1 1 0 0 0 0 1.4l12.6 12.6a1 1 0 0 0 1.4 0l4.6-4.6a1 1 0 0 0 0-1.4z"/><path d="m7.5 10.5 2-2M10.5 13.5l2-2M13.5 16.5l2-2"/></symbol><symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol><symbol id="i-pushleft" viewBox="0 0 24 24"><path d="M3 4v16M7 12h14M11 8l-4 4 4 4"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7l10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1z"/><path d="m2 16 3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 17v-6M13 17V7M18 17v-4"/></symbol><symbol id="i-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol><symbol id="i-factory" viewBox="0 0 24 24"><path d="M2 20V8l6 4V8l6 4V4h8v16H2z"/><path d="M17 16h1M12 16h1M7 16h1"/></symbol><symbol id="i-ship" viewBox="0 0 24 24"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1s1.2 1 2.5 1c2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.4 18 21 12l-9-4-9 4 1.6 6"/><path d="M12 8V3M5 11V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v5"/></symbol><symbol id="i-anchor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/></symbol><symbol id="i-truck" viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol><symbol id="i-clipcheck" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol><symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></symbol><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol><symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-wifioff" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M2 8.8a15 15 0 0 1 4.2-2.6M10.7 5.1A15 15 0 0 1 22 8.8M5 12.9a10 10 0 0 1 5.2-2.8M16.9 11.5A10 10 0 0 1 19 12.9M12 20h.01"/></symbol><symbol id="i-sheet" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8M12 13v4"/></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol><symbol id="i-rotate" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-shieldcheck" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></symbol><symbol id="i-box" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol><symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3 8.7 2.7a1 1 0 0 0-1.4 0L2.7 7.3a1 1 0 0 0 0 1.4l12.6 12.6a1 1 0 0 0 1.4 0l4.6-4.6a1 1 0 0 0 0-1.4z"/><path d="m7.5 10.5 2-2M10.5 13.5l2-2M13.5 16.5l2-2"/></symbol><symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol><symbol id="i-pushleft" viewBox="0 0 24 24"><path d="M3 4v16M7 12h14M11 8l-4 4 4 4"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7l10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1z"/><path d="m2 16 3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 17v-6M13 17V7M18 17v-4"/></symbol><symbol id="i-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol><symbol id="i-factory" viewBox="0 0 24 24"><path d="M2 20V8l6 4V8l6 4V4h8v16H2z"/><path d="M17 16h1M12 16h1M7 16h1"/></symbol><symbol id="i-ship" viewBox="0 0 24 24"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1s1.2 1 2.5 1c2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.4 18 21 12l-9-4-9 4 1.6 6"/><path d="M12 8V3M5 11V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v5"/></symbol><symbol id="i-anchor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/></symbol><symbol id="i-truck" viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol><symbol id="i-clipcheck" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol><symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></symbol><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol><symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-wifioff" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M2 8.8a15 15 0 0 1 4.2-2.6M10.7 5.1A15 15 0 0 1 22 8.8M5 12.9a10 10 0 0 1 5.2-2.8M16.9 11.5A10 10 0 0 1 19 12.9M12 20h.01"/></symbol><symbol id="i-sheet" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8M12 13v4"/></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol><symbol id="i-rotate" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol><symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol></svg>
 
-<!-- NAV -->
 <nav>
-<div class="logo"><img src="logo.png" alt="ExVAN Planner" style="height:36px;vertical-align:middle;margin-right:8px;">Ex<span>VAN</span> Planner</div>
-<ul>
-<li><a href="#promise">4つの約束</a></li>
-<li><a href="#engines">エンジン</a></li>
-<li><a href="#features5">特長</a></li>
-<li><a href="#contact">βレビュー協力</a></li>
-</ul>
+  <a class="logo" href="#"><img src="logo.png" alt=""><span>Ex<b>VAN</b> Planner</span></a>
+  <ul><li><a href="#what">概要</a></li><li><a href="#features">機能</a></li><li><a href="#merit">メリット</a></li><li><a href="#security">セキュリティ</a></li><li><a href="#compare">比較</a></li></ul>
+  <a class="cta" href="#contact">βレビューに協力する</a>
 </nav>
 
-<!-- ============ HERO WITH 3D BACKGROUND ============ -->
-<section class="hero">
-<div class="hero-overlay"></div>
-<div class="hero-content">
-<div class="hero-brand">
-<img src="logo.png" alt="ExVAN Planner ロゴ"><span>Ex<span class="brand-highlight">VAN</span>&nbsp;Planner</span>
-</div>
-<div class="hero-badge">Container Loading Optimization Software</div>
-<h1>簡単で一瞬、<br><span class="gr">3Dをお届け。</span></h1>
-<p class="tl">難しい設定、一切なし。その日から実践投入できる積付け計画ツール。</p>
-<p class="tl2">HTML出力で、誰でもどこでも3D確認。</p>
-<div class="cta-group">
-<a href="#contact" class="btn btn-primary">βレビュー協力に応募する<svg class="ic"><use href="#i-arrow"/></svg></a>
-<a href="#live3d" class="btn btn-outline">3D積付けを見る</a>
-</div>
-</div>
-<div class="hero-scroll">SCROLL</div>
-</section>
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="tag">CONTAINER LOADING PLANNER — FOR OCEAN FREIGHT</div>
+    <h1>海上コンテナの積付けを、<br>自動で。そのまま<em>3D</em>で共有。</h1>
+    <p class="lead">ExVAN Planner は、20F・40F・40HC の海上コンテナに特化した自動積付けソフトです。貨物リストを取り込めば積付けプランを自動で作り、その3Dイメージを HTML ファイル1つで荷主・倉庫・現場に共有できます。</p>
+    <div class="ctas">
+      <a class="btn btn-solid" href="#contact">βレビューに協力する<svg class="ic"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-line" href="demo.html" target="_blank" rel="noopener">3D出力サンプルを開く<svg class="ic"><use href="#i-ext"/></svg></a>
+    </div>
+    <div class="facts">
+      <div><b>FOR</b>海上コンテナ専用</div>
+      <div><b>ENGINE</b>4つの積付けエンジン</div>
+      <div><b>SHARE</b>HTMLで3D共有</div>
+      <div><b>NETWORK</b>外部通信なし</div>
+    </div>
+  </div>
+</header>
 
-<!-- ============ LIVE 3D ============ -->
-<section class="live3d" id="live3d">
-<div class="container">
-<h2 class="section-title fade-in">計算した瞬間、3Dで見える。</h2>
-<span class="ex-word">Live 3D Preview</span>
-<p class="section-sub fade-in">40Fコンテナに18個の貨物を積み付ける様子。ドラッグで回転できます。</p>
-<div class="live3d-frame fade-in">
-<canvas id="hero-canvas"></canvas>
-<div id="hero-stats">
-<div class="hs-row"><span class="hs-l">コンテナ</span><span class="hs-v">40F Dry</span></div>
-<div class="hs-row"><span class="hs-l">貨物数</span><span class="hs-v"><span id="hcnt">0</span>/18</span></div>
-<div class="hs-row"><span class="hs-l">積載率</span><span class="hs-v hs-big" id="hrate">0%</span></div>
-<div class="bar-bg"><div class="bar" id="hbar"></div></div>
-</div>
-<div class="live3d-cap"><svg class="ic"><use href="#i-rotate"/></svg>ドラッグで回転</div>
-</div>
-</div>
+<!-- 01 WHAT -->
+<section class="what" id="what">
+  <canvas id="hero-canvas"></canvas>
+  <div id="hero-stats">
+    <div class="hd">LIVE — 40F DRY</div>
+    <div class="hs-row"><span class="hs-l">貨物数</span><span class="hs-v"><span id="hcnt">0</span>/18</span></div>
+    <div class="hs-row"><span class="hs-l">積載率</span><span class="hs-v hs-big" id="hrate">0%</span></div>
+    <div class="bar-bg"><div class="bar" id="hbar"></div></div>
+  </div>
+  <div class="cap"><svg class="ic"><use href="#i-rotate"/></svg>ドラッグで回転できます</div>
+  <div class="wrap">
+    <div class="txt fade-in">
+      <div class="sec-hd" style="grid-template-columns:1fr;gap:14px;margin-bottom:0"><div class="no" style="max-width:200px"><b>01</b>WHAT IT DOES</div>
+      <h2>貨物リストから、<br>積付けプランと3Dを。</h2></div>
+      <ul class="steps">
+        <li><span class="n">01</span><div><h3>取り込む</h3><p>Excel・CSV、または生成AIで整えたテキストを貼り付けるだけ。</p></div></li>
+        <li><span class="n">02</span><div><h3>自動で積む</h3><p>海上コンテナの条件で、4つのエンジンが積付けを計算。重量・重心・軸重もチェック。</p></div></li>
+        <li><span class="n">03</span><div><h3>3Dで共有する</h3><p>結果を HTML ファイルに出力。メールで送れば、相手はブラウザで3Dを開けます。</p></div></li>
+      </ul>
+    </div>
+  </div>
 </section>
+<div class="statline">
+  <div><b>4</b><span>積付けエンジン</span></div>
+  <div><b>60+</b><span>実務から逆算した機能</span></div>
+  <div><b>約3分</b><span>プラン作成の目安</span></div>
+  <div><b>0</b><span>外部への通信</span></div>
+</div>
 
-<!-- ============ VIDEO ============ -->
-<section id="video" style="background:#080c14;padding:70px 20px;">
-<div class="container">
-<h2 class="section-title fade-in">操作紹介動画</h2>
-<span class="ex-word">See It In Action</span>
-<p class="section-sub fade-in">2分でわかるExVAN Plannerの基本操作。</p>
-<div class="fade-in" style="max-width:900px;margin:0 auto;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid #21262d;">
-    <iframe src="https://www.youtube.com/embed/H5DP-TAlD4s"
-      title="ExVAN Planner 操作紹介"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-      style="position:absolute;top:0;left:0;width:100%;height:100%;">
-    </iframe>
+<!-- 02 FEATURES -->
+<section class="sec" id="features">
+<div class="wrap">
+  <div class="sec-hd fade-in"><div class="no"><b>02</b>FEATURES</div><div><h2>機能の紹介</h2><p>海上コンテナの積付けに必要なことだけを、実務の順番に並べました。</p></div></div>
+
+  <!-- A basic -->
+  <div class="feat fade-in">
+    <div class="ftxt">
+      <div class="k">A — 基本機能</div>
+      <h3>海上コンテナに特化した、<br>自動積付け。</h3>
+      <p>20F・40F・40HC の内寸、扉の位置、最大積載重量、積み高さや支持面の条件を前提に計算します。用途に合わせて4つのエンジンを切り替え、結果をすぐ3Dで比べられます。</p>
+      <ul>
+        <li>コンテナの種類と本数を自動で提案（コスト比較つき）</li>
+        <li>積み順・壁の作り方まで「現場で積める」配置</li>
+        <li>画面上でサイズ・重量を直して、その場で再計算</li>
+      </ul>
+    </div>
+    <figure><div class="shot"><img src="ExVANtop.png" alt="ExVAN Planner の操作画面" loading="lazy"></div>
+      <figcaption><b>操作画面</b> — 左に入力とエンジン選択、中央に3D、下に貨物明細。</figcaption></figure>
+  </div>
+
+  <div class="engines fade-in">
+    <div class="eng"><div class="nm">KATAYOSE A / B<small>片寄エンジン A・B</small></div>
+      <div><h4>「あとどれくらい入る？」</h4><p>奥から詰めて、残りのスペースを見える化。コンテナは決まっているが物量が流動的なときに。詰め方の違う「片寄A」「片寄B」の2つから選べます。</p></div>
+      <div class="th"><img src="ss_katayose.png" alt="片寄エンジンの結果" loading="lazy"></div></div>
+    <div class="eng"><div class="nm">BUNSAN<small>分散エンジン</small></div>
+      <div><h4>「最適にどう積む？」</h4><p>独自の高さ最適化理論で、職人が積んだような壁を作る配置を自動生成。複数パターンを採点して、いちばん良い案を提案します。</p></div>
+      <div class="th"><img src="ss_bunsan.png" alt="分散エンジンの結果" loading="lazy"></div></div>
+    <div class="eng"><div class="nm">ANZEN<small>安全エンジン</small></div>
+      <div><h4>「重量物も安全に」</h4><p>分散エンジンの機能に重心制御を追加。重量物を自動で見つけ、シーソー配置・中央寄せでバランスを取ります。</p></div>
+      <div class="th"><img src="ss_anzen.png" alt="安全エンジンの結果" loading="lazy"></div></div>
+  </div>
+
+  <!-- B safety -->
+  <div class="feat rev fade-in">
+    <div class="ftxt">
+      <div class="k">B — 安全チェック</div>
+      <h3>過積載と偏重心を、<br>積む前に見つける。</h3>
+      <p>コンテナ自重と貨物重量を合わせて計算し、過積載・偏重心・2軸/3軸の軸重を、<span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span>の信号表示と数値で示します。Safe Zone と重量ヒートマップで、どこが重いかも一目で分かります。</p>
+    </div>
+    <div class="shots2">
+      <figure><div class="shot"><img src="ss_alert.png" alt="過積載と偏重心のアラート表示" loading="lazy"></div><figcaption><b>NG</b> — 過積載・偏重心をアラートで検知</figcaption></figure>
+      <figure><div class="shot"><img src="ss_anzen_3axis.png" alt="3軸クリア・偏重心OKの表示" loading="lazy"></div><figcaption><b>OK</b> — 3軸クリア・偏重心OK</figcaption></figure>
+    </div>
+  </div>
+
+  <!-- C AI import -->
+  <div class="feat fade-in" style="grid-template-columns:1fr">
+    <div class="ftxt" style="max-width:720px">
+      <div class="k">C — 取り込み</div>
+      <h3>入力の手間は、AIに任せる前提で。</h3>
+      <p>パッキングリストやインボイスは、会社ごとに書式がばらばらです。ExVAN Planner は、普段お使いの生成AIでデータを整えてから貼り付けることを前提に作っています。整形用のプロンプトはアプリに入っていて、自社用に書き換えて保存できます。アプリ自体にAIは入っていないので、API費用はかからず、アプリから外部へデータが送られることもありません。</p>
+    </div>
+    <div class="aiflow">
+      <div class="bx"><span class="mono">INPUT</span><h5>PL・INV・メール本文</h5><p>書式がばらばらの貨物データ</p><div class="raw">CTN 1-12  120x100x120cm
+GW 450kg/ctn ...
+No.13  110×110×100 ...</div></div>
+      <div class="ar"><svg class="ic"><use href="#i-arrow"/></svg></div>
+      <div class="bx"><span class="mono">YOUR AI</span><h5>お使いの生成AI</h5><p>アプリ内蔵のプロンプトをコピーして渡すと、決まった形式の表に整えてくれます。</p></div>
+      <div class="ar"><svg class="ic"><use href="#i-arrow"/></svg></div>
+      <div class="bx hl"><span class="mono">EXVAN</span><h5>貼り付けて取り込み</h5><p>そのまま貨物リストに。Excel・CSV の読み込みや、雛形のダウンロードにも対応。</p></div>
+    </div>
   </div>
 </div>
+</section>
+
+<!-- KEY FEATURE -->
+<section class="key" id="share">
+<div class="wrap">
+  <div class="grid">
+    <div class="fade-in">
+      <div class="k">KEY FEATURE — HTML 3D SHARE</div>
+      <h3>積付けの3Dイメージを、<br>HTMLファイル1つで渡せる。</h3>
+      <p>計算結果を、3Dビュー付きの HTML ファイルとして出力します。受け取った人はブラウザで開くだけ。専用ソフトもアカウントも要りません。荷主・倉庫・現場が同じ3Dを見ながら話せます。</p>
+      <ul>
+        <li><svg class="ic"><use href="#i-globe"/></svg>ブラウザで開くだけ・インストール不要</li>
+        <li><svg class="ic"><use href="#i-phone"/></svg>スマホ・タブレットでも操作できる</li>
+        <li><svg class="ic"><use href="#i-layers"/></svg>段階スライダーで積む順番を再生</li>
+        <li><svg class="ic"><use href="#i-chart"/></svg>重量ヒートマップ表示</li>
+        <li><svg class="ic"><use href="#i-archive"/></svg>積めなかった貨物もそのまま見せられる</li>
+        <li><svg class="ic"><use href="#i-send"/></svg>メールに添付できる軽さ</li>
+      </ul>
+      <div class="links"><a href="demo.html" target="_blank" rel="noopener">サンプルを別タブで開く →</a></div>
+    </div>
+    <div class="fade-in">
+      <div class="demo" id="demo"><div class="ph" role="button" tabindex="0" aria-label="3D出力サンプルを読み込む"><div class="play"><svg class="ic"><use href="#i-play"/></svg></div><span>クリックで実際の出力HTMLを読み込む（約5MB）</span></div></div>
+      <figure><figcaption><b>実物</b> — ExVAN Planner が出力した HTML をそのまま埋め込んでいます。</figcaption></figure>
+    </div>
+  </div>
 </div>
 </section>
-<div class="grad-div"></div>
 
-<!-- ============ STATS ============ -->
-<section class="stats-sec">
-<div class="container">
-<div class="stats-title fade-in"><span class="ex-word" style="font-size:15px;">Express Results</span></div>
-<div class="stats-grid fade-in">
-<div class="stat-item"><div class="sn">60+</div><div class="sl">搭載機能</div></div>
-<div class="stat-item"><div class="sn">3</div><div class="sl">積付けエンジン</div></div>
-<div class="stat-item"><div class="sn">3分</div><div class="sl">プラン作成時間</div></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
+<section class="sec" style="border-top:none">
+<div class="wrap">
+  <!-- D annotation NEW -->
+  <div class="feat fade-in" style="padding-top:0;border-top:none">
+    <div class="ftxt">
+      <div class="k"><span class="new">NEW</span>D — 3D注釈</div>
+      <h3>3Dの中に、<br>注釈を書き込める。</h3>
+      <p>3Dビューの中に注釈（コメント）を入れられるようになりました。注釈は HTML 出力にも入るので、注意点や指示を、積付けイメージの上でそのまま相手に伝えられます。</p>
+    </div>
+    <div class="ftxt">
+      <ul style="margin-top:0">
+        <li>例：「この2個は上積み禁止」「ここは緩衝材を入れる」</li>
+        <li>例：「この貨物は次の船に回す予定」</li>
+        <li>出力した HTML を開いた人にも、同じ位置に注釈が表示される</li>
+      </ul>
+    </div>
+  </div>
 
-<!-- ============ 4つの約束 ============ -->
-<section class="promise" id="promise">
-<div class="container">
-<h2 class="section-title fade-in">4つの約束</h2>
-<span class="ex-word">Excellent Simplicity</span>
-<p class="section-sub fade-in">高機能なだけのソフトは、もういらない。</p>
-<div class="promise-grid">
-<div class="promise-card fade-in" data-slide="simple">
-<div class="ibox"><svg class="ic"><use href="#i-sliders"/></svg></div>
-<h3>すごくシンプル</h3>
-<p>簡単操作で誰でも使える。熟練の積み付けを。<br>いらない機能は徹底排除。<br>分かりにくいUIは全て削った。<br>その日から実践投入できる簡単さ。</p>
-</div>
-<div class="promise-card fade-in" data-slide="visual">
-<div class="ibox"><svg class="ic"><use href="#i-eye"/></svg></div>
-<h3>すごく見やすい</h3>
-<p>3Dで見れば一発で理解。<br>重量を色で可視化。<br>エンジンを切り替えて結果の違いを3Dで比較。<br>重なりや高低も直感的に把握できる。</p>
-</div>
-<div class="promise-card fade-in" data-slide="anzen">
-<div class="ibox"><svg class="ic"><use href="#i-shieldcheck"/></svg></div>
-<h3>すごく安全</h3>
-<p>過積載・偏重心を自動検知してアラート。<br>コンテナ自重＋貨物重量のハイブリッド計算。<br>完全ローカル動作——外部通信ゼロ。<br>貨物情報・顧客情報がサーバーに出ない構造。</p>
-</div>
-<div class="promise-card fade-in" data-slide="html3d_promise">
-<div class="ibox"><svg class="ic"><use href="#i-send"/></svg></div>
-<h3>すごく伝わる</h3>
-<p>積付けプランをHTMLファイルで出力。<br>メールに添付するだけ。<br>受け取った相手はブラウザで開くだけ——インストール不要・ソフト不要・アカウント不要。<br>荷主・倉庫・現場が同じ3Dを見て話せる。</p>
-<ul class="mini-list">
-<li><svg class="ic"><use href="#i-box"/></svg>「これが今回の積付けプランです」</li>
-<li><svg class="ic"><use href="#i-alert"/></svg>「この貨物は今回積めませんでした」</li>
-<li><svg class="ic"><use href="#i-ruler"/></svg>「梱包をあと10cm小さくすると入ります」</li>
-<li><svg class="ic"><use href="#i-plane"/></svg>「この2個だけAIRにします」</li>
-</ul>
-</div>
-</div>
-<div style="text-align:center;margin-top:32px;" class="fade-in">
-<a href="#features5" class="btn btn-outline" onclick="document.getElementById('features5').scrollIntoView({behavior:'smooth'});return false;" style="margin-right:12px;">6つの特長を見る</a>
-<a href="demo.html" target="_blank" class="btn btn-primary">3D出力サンプルを確認する<svg class="ic"><use href="#i-arrow"/></svg></a>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ 課題 ============ -->
-<section class="problems" id="problems">
-<div class="container">
-<h2 class="section-title fade-in">こんな状況、ありませんか？</h2>
-<span class="ex-word">Example</span>
-<p class="section-sub fade-in">現場では毎日こんな事が起きています。</p>
-<div class="prob-grid">
-<div class="prob-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-clock"/></svg></div><h4>積付けプランに30分以上</h4><p>忙しい時ほど雑になる。品質がバラつく。</p></div>
-<div class="prob-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-help"/></svg></div><h4>最適なコンテナが分からない</h4><p>20F？40F？勘と経験に頼っている。</p></div>
-<div class="prob-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-alert"/></svg></div><h4>荷崩れが心配</h4><p>耐荷重・偏荷重の判断がベテラン頼み。</p></div>
-<div class="prob-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-share"/></svg></div><h4>プランの共有が面倒</h4><p>Excelの図面を送っても、相手が理解してくれない。</p></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ 3 ENGINES ============ -->
-<section class="engines" id="engines">
-<div class="container">
-<h2 class="section-title fade-in">3つの積付けエンジン</h2>
-<span class="ex-word">3 Expert Engines</span>
-<p class="section-sub fade-in">用途で選べる。すべて「現場で積める」設計。</p>
-<div class="eng-grid">
-<div class="eng-card kata fade-in" data-slide="katayose"><div class="ibox"><svg class="ic"><use href="#i-pushleft"/></svg></div><div class="e-name">KATAYOSE ENGINE</div><div class="e-q">「あとどれくらい入る？」</div><p>コンテナが決まっている状況で、奥から詰めて残スペースを可視化。物量が流動的な場面に。</p></div>
-<div class="eng-card bunsan fade-in" data-slide="bunsan"><div class="ibox"><svg class="ic"><use href="#i-layers"/></svg></div><div class="e-name">BUNSAN ENGINE</div><div class="e-q">「最適にどう積む？」</div><p>独自の「高さ最適化理論」搭載。壁構造で職人のような積み方を自動生成。複数パターンを自動スコアリングし最良を提案。位置の指定で柔軟に対応。</p></div>
-<div class="eng-card anzen fade-in" data-slide="anzen"><div class="ibox"><svg class="ic"><use href="#i-scale"/></svg></div><div class="e-name">ANZEN ENGINE</div><div class="e-q">「重量物も安全に」</div><p>分散エンジンの全機能＋重心制御。標準偏差で異常重量物を自動検知。シーソー配置・中央寄せで安全な積付けを実現。</p></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ BEFORE/AFTER ============ -->
-<section class="ba">
-<div class="container">
-<h2 class="section-title fade-in">何が変わるのか</h2>
-<span class="ex-word">Exceed</span>
-<div class="ba-grid fade-in">
-<div class="ba-card before"><h3>従来の方法</h3><ul>
-<li>手作業で30分以上</li><li>Excel図面で共有 → 伝わらない</li><li>経験者しか判断できない</li><li>積載率だけ追求 → 現場で積めない</li><li>クレーム時に記録がない</li><li>コンテナ選定が勘頼み</li><li>データ整備に時間がかかる</li><li>高額なソフト or 無料だけど不便なExcel</li>
-</ul></div>
-<div class="ba-card after"><h3>ExVAN Planner</h3><ul>
-<li>自動計算で3分</li><li>HTML 3Dで共有 → 専用ソフト不要で共有、スマホでも！</li><li><span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span>の信号表示で誰でも安全判断</li><li>作業性・安全性も同時に最適化</li><li>チェックシートでエビデンス記録</li><li>コスト比較で最適コンテナ自動提案</li><li>AIでデータ整形 → コピペで取り込み</li><li>全機能が使い放題</li>
-</ul></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ TARGETS ============ -->
-<section class="targets" id="targets">
-<div class="container">
-<h2 class="section-title fade-in">それぞれの現場に、それぞれの価値</h2>
-<span class="ex-word">Experience for Everyone</span>
-<div class="tgt-grid">
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-chart"/></svg></div><h4>マネージャー</h4><p>コスト削減・属人化排除・コンプライアンス。重量/重心/軸数の自動チェック。</p><div class="t-quote">「コンテナ1本減れば、年間で数百万削減」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-brief"/></svg></div><h4>営業</h4><p>荷主への提案力・見積もり即レス・状況共有ツール。</p><div class="t-quote">「荷主に3Dデータをメールで共有。信頼が変わる」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-monitor"/></svg></div><h4>オペレーター</h4><p>簡単・便利・早い。前回データの再利用で定期便も楽。</p><div class="t-quote">「Excel手作業、もうやめませんか」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-phone"/></svg></div><h4>現場作業員</h4><p>PCいらず。スマホで積み順確認。倉庫でリフト上でも。</p><div class="t-quote">「スマホで開いて、積み順そのまま」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-factory"/></svg></div><h4>荷主</h4><p>輸送コスト削減・梱包シミュレーション・輸入者への説明資料。</p><div class="t-quote">「梱包変えたら何本になるか、すぐ分かる」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-ship"/></svg></div><h4>輸入者</h4><p>事前に3Dで中身の配置確認。デバン計画に活用。</p><div class="t-quote">「コンテナを開ける前に、中身が見える」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-anchor"/></svg></div><h4>港湾・船会社</h4><p>偏重心の危険コンテナを事前把握。安全管理に。</p><div class="t-quote">「危険なコンテナを、積む前に検知」</div></div>
-<div class="tgt-card fade-in"><div class="ibox sm"><svg class="ic"><use href="#i-truck"/></svg></div><h4>陸送業者</h4><p>過積載・軸重の確認。道路交通法違反の防止。</p><div class="t-quote">「走る前に、違反がないか確認」</div></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ 5 KEY FEATURES ============ -->
-<section class="f5" id="features5">
-<div class="container">
-<h2 class="section-title fade-in">6つの特長</h2>
-<span class="ex-word">6 Exclusive Features</span>
-<p class="section-sub fade-in">現場で何が変わるか。それだけを追求した。</p>
-<div class="f5-grid">
-<div class="f5-card fade-in" data-slide="html3d"><div class="ibox"><svg class="ic"><use href="#i-globe"/></svg></div><h4>HTML 3D出力・共有</h4><p>積付けプランをHTMLで出力。ブラウザで開くだけ。スマホでも。特別なソフト不要。メール添付できる軽量サイズ。段階スライダー・ヒートマップも搭載。受け取った人が「おお」と言うやつ。</p>
-<div style="margin-top:12px;">
-  <a href="demo.html" target="_blank" style="color:#58a6ff; font-size:13px; font-weight:bold; display:inline-flex;align-items:center;gap:6px;">実際の3D出力サンプルを見る<svg class="ic" style="width:15px;height:15px"><use href="#i-arrow"/></svg></a>
-</div>
-<span class="tag">業界初</span></div>
-<div class="f5-card fade-in" data-slide="waterline"><div class="ibox"><svg class="ic"><use href="#i-layers"/></svg></div><h4>自動高さ調整機能</h4><p>独自理論で最適な積み高さを自動検知。複数パターンを自動スコアリング。詰めるだけじゃない。荷崩れしない・作業しやすい・壁が綺麗。職人が積んだような配置を自動生成。</p><span class="tag">独自技術</span></div>
-<div class="f5-card fade-in" data-slide="safety"><div class="ibox"><svg class="ic"><use href="#i-shield"/></svg></div><h4>安全アラート機能</h4><p>過積載・偏重心を <span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span> と数値でリアルタイム表示。2軸/3軸計算対応。Safe Zone可視化・重量ヒートマップ直感的把握。</p><span class="tag">可視化</span></div>
-<div class="f5-card fade-in" data-slide="ai"><div class="ibox"><svg class="ic"><use href="#i-cpu"/></svg></div><h4>AI連携データ整形</h4><p>最も面倒なデータ整備をAIに任せる設計。PLやINVのデータをLLMで整形し、コピペで取込。アプリにAIは非搭載。企業の既存LLMを使うからAPI費用ゼロ。プロンプトはカスタマイズ保存可能。</p><span class="tag">API費用¥0</span></div>
-<div class="f5-card fade-in" data-slide="checklist"><div class="ibox"><svg class="ic"><use href="#i-clipcheck"/></svg></div><h4>チェックシート出力</h4><p>積付け結果をExcelで出力。CLP指示書としてそのまま使える。貨物チェックシート機能で積付け記録がエビデンスに。荷主からの事後問合せにも対応。</p><span class="tag">エビデンス</span></div>
-<div class="f5-card fade-in"><div class="ibox"><svg class="ic"><use href="#i-archive"/></svg></div><h4>積み残し待避エリア</h4><p>積めなかった貨物を「外に出して眺める」——現場の思考をそのままソフトに。サイズオーバー・過積載で入らない貨物を待避エリアに仮置きし、3D表示のまま判断できる。</p>
-<ul style="font-size:11px;color:#8b949e;margin-top:10px;padding-left:16px;line-height:1.9;">
-<li>次の船便に回す</li>
-<li>LCL・混載で出す</li>
-<li>航空便（AIR）に切り替える</li>
-<li>梱包サイズ変更を荷主に提案</li>
-<li>別コンテナに移動して再計算</li>
-<li>待避状態のままHTML 3D出力して荷主に説明資料として送付</li>
-</ul>
-<span class="tag">現場主義</span></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ ACCORDION ============ -->
-<section class="accord" id="allfeatures">
-<div class="container">
-<h2 class="section-title fade-in">全機能一覧</h2>
-<span class="ex-word">Explore All Features</span>
-<p class="section-sub fade-in">60以上の機能。実務から逆算した、使える機能だけ。</p>
-<div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-grid"/></svg>積付けエンジン（9機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>片寄エンジン：奥詰め・残スペース可視化</li><li>分散エンジン：壁構造型・職人的プラン自動生成</li><li>安全エンジン：重心制御・標準偏差で異常検知</li><li>高さ自動最適化：最適な積み高さを自動検知</li><li>自動スコアリング：複数係数で再計算し最良を提案</li><li>手動係数調整：水面係数を変更して再計算</li><li>荷崩れ防止：壁品質・空間品質・穴品質を評価</li><li>作業性配慮：積み順・壁構造・奥高手前低</li><li>コンテナ本数最小化：品質を犠牲にしないコスト最適化</li></ul></div></div>
-<div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-box"/></svg>3Dビューワー（10機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>3D貨物表示：マウス回転・ズーム・パン</li><li>貨物番号表示切替：ON/OFFで見やすさ調整</li><li>段階スライダー：積付け状況を段階的に再現</li><li>Safe Zone可視化：偏重心検知ゾーンを3D表示</li><li>重心XYZ交点表示：Safe Zone内かを目視確認</li><li>ヒートマップ表示：重量による色グラデーション</li><li>残距離表示：最終貨物から残り距離を罫線+数値表示</li><li>複数コンテナ切替：チェックボックスで切替</li><li>積み残しエリア：貨物を外に出す・他コンテナ移動を可視化</li><li>クリアランス設定：有効内寸を罫線+数値で表示</li></ul></div></div>
+  <!-- E others -->
+  <div class="ftxt fade-in" style="padding-top:56px;border-top:1px solid var(--line)"><div class="k">E — そのほかの機能</div></div>
+  <div class="mlist fade-in">
+    <div><h5><svg class="ic"><use href="#i-clipcheck"/></svg>チェックシート・CLP出力</h5><p>積付け結果を Excel で出力。指示書として現場で使え、積付けの記録がそのままエビデンスになります。</p></div>
+    <div><h5><svg class="ic"><use href="#i-archive"/></svg>積み残し待避エリア</h5><p>入らない貨物を3D上で外に仮置き。次の船・LCL・AIR・梱包変更の判断材料に。</p></div>
+    <div><h5><svg class="ic"><use href="#i-folder"/></svg>保存とダッシュボード</h5><p>荷主名・作業日・Ref で保存・検索。前回のデータを直して定期便にも。</p></div>
+  </div>
+  <div class="acc-wrap fade-in">
+    <div class="acc-title">ALL FEATURES — 全機能一覧</div>
+<div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-grid"/></svg>積付けエンジン（4エンジン・9機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>片寄エンジン A / B：奥詰め・残スペース可視化</li><li>分散エンジン：壁構造型・職人的プラン自動生成</li><li>安全エンジン：重心制御・標準偏差で異常検知</li><li>高さ自動最適化：最適な積み高さを自動検知</li><li>自動スコアリング：複数係数で再計算し最良を提案</li><li>手動係数調整：水面係数を変更して再計算</li><li>荷崩れ防止：壁品質・空間品質・穴品質を評価</li><li>作業性配慮：積み順・壁構造・奥高手前低</li><li>コンテナ本数最小化：品質を犠牲にしないコスト最適化</li></ul></div></div>
+<div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-box"/></svg>3Dビューワー（11機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>3D貨物表示：マウス回転・ズーム・パン</li><li>貨物番号表示切替：ON/OFFで見やすさ調整</li><li>段階スライダー：積付け状況を段階的に再現</li><li>Safe Zone可視化：偏重心検知ゾーンを3D表示</li><li>重心XYZ交点表示：Safe Zone内かを目視確認</li><li>ヒートマップ表示：重量による色グラデーション</li><li>残距離表示：最終貨物から残り距離を罫線+数値表示</li><li>複数コンテナ切替：チェックボックスで切替</li><li>積み残しエリア：貨物を外に出す・他コンテナ移動を可視化</li><li>クリアランス設定：有効内寸を罫線+数値で表示</li><li>3D注釈：3Dビューの中にコメントを書き込み、HTML出力にも反映</li></ul></div></div>
 <div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-share"/></svg>出力機能（8機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>HTML 3D出力：ブラウザだけで開ける</li><li>軽量サイズ：メール添付可能</li><li>段階スライダー：出力HTML側にも搭載</li><li>スマホ・タブレット対応：タッチ操作UI</li><li>ヒートマップ表示：出力HTML側にも搭載</li><li>Excel CLP / 積付け指示書出力</li><li>チェックシート機能：エビデンス記録</li><li>コメント反映：全体用・コンテナ個別用</li></ul></div></div>
 <div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-download"/></svg>入力・編集（11機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>Excel / CSV インポート</li><li>テキスト貼り付け（LLM出力をそのまま取込）</li><li>指定フォーマットDL機能</li><li>追加インポート：既存データに＋で追加再計算</li><li>画面上編集：サイズ・重量・耐荷重を変更→再計算</li><li>貨物追加・削除</li><li>F/D位置指定：奥/手前の希望位置を指定</li><li>別コンテナ移動・積み残しエリア退避</li><li>貨物リストコピー：ボタン1発でクリップボードへ</li><li>AIプロンプト内蔵：カスタマイズ保存・デフォルト戻し可能</li><li>コンテナ個別再計算 / 全体再計算 / 手動移動後の再最適化</li></ul></div></div>
 <div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-calc"/></svg>コスト・安全性（6機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>20F / 40F / 40HC 自動選定</li><li>コンテナコスト設定・比較提案（20F×2 vs 40F×1）</li><li>2軸 / 3軸計算：過積載防止</li><li>充填率リアルタイム表示</li><li>過積載アラート：<span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span>＋数値</li><li>偏重心アラート：<span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span>＋数値</li></ul></div></div>
 <div class="acc-item fade-in"><div class="acc-hd"><span class="lbl"><svg class="ic"><use href="#i-folder"/></svg>データ管理（9機能）</span><span class="aw">▶</span></div><div class="acc-bd"><ul><li>保存機能：計算結果を保存</li><li>ダッシュボード：保存データの一覧管理</li><li>検索・ソート・並替：荷主名・日付・Ref等</li><li>再編集・再保存：過去データを修正→再保存</li><li>荷主名・作業日・Ref番号入力</li><li>コメント入力（Shipment全体 / コンテナ個別）</li><li>複数コンテナ管理</li><li>ローカル動作・ネット不要</li><li>データ外部流出なし</li></ul></div></div>
-</div>
-</section>
-<div class="grad-div"></div>
 
-<!-- ============ PHILOSOPHY ============ -->
-<section class="philosophy" id="philosophy">
-<div class="container">
-<div class="phil-box fade-in">
-<span class="ex-word" style="margin-bottom:16px;">Excellence</span>
-<div class="phil-q">「高性能とは、<br><span class="gr">誰でも使いこなせること。</span>」</div>
-<ul class="phil-list">
-<li>いらない機能は、面倒な手順は徹底的に削った</li>
-<li>分かりにくいUIは全て排除。見やすさ使いやすさを追求</li>
-<li>その日から実践投入。学習コスト0の現場主義</li>
-<li>3Dデータ閲覧はPCでもスマホでも誰でもどこでも費用もフリー</li>
-<li>凄い計算を、当たり前のようにシンプルに</li>
-</ul>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ SECURITY ============ -->
-<section class="security">
-<div class="container">
-<h2 class="section-title fade-in">情報セキュリティ</h2>
-<span class="ex-word">Secure by Design</span>
-<p class="section-sub fade-in">貨物データは、一切外部に出ません。</p>
-<div class="sec-grid fade-in">
-<div class="sec-card"><div class="ibox"><svg class="ic"><use href="#i-lock"/></svg></div><h4>ローカル完結</h4><p>クラウド不要。お客様のPC上で完結。</p></div>
-<div class="sec-card"><div class="ibox"><svg class="ic"><use href="#i-wifioff"/></svg></div><h4>ネット不要</h4><p>オフライン環境でも動作。</p></div>
-<div class="sec-card"><div class="ibox"><svg class="ic"><use href="#i-shield"/></svg></div><h4>データ外部送信ゼロ</h4><p>貨物データがサーバーに出ることは一切ありません。</p></div>
-</div>
-</div>
-</section>
-<div class="grad-div"></div>
-
-<!-- ============ FLOW ============ -->
-<section class="flow">
-<div class="container">
-<h2 class="section-title fade-in">ご利用の流れ</h2>
-<span class="ex-word">Express — 4 Steps to Execute</span>
-<div class="flow-grid">
-<div class="flow-step fade-in" data-slide="step1"><div class="sn">1</div><div class="ibox sm"><svg class="ic"><use href="#i-sheet"/></svg></div><h4>貨物データ準備</h4><p>Excel / CSV / テキスト貼り付け。AIでの整形も可能。</p></div>
-<div class="flow-step fade-in" data-slide="step2"><div class="sn">2</div><div class="ibox sm"><svg class="ic"><use href="#i-zap"/></svg></div><h4>エンジン選択・計算</h4><p>3つのエンジンから選んでワンクリック。</p></div>
-<div class="flow-step fade-in" data-slide="step3"><div class="sn">3</div><div class="ibox sm"><svg class="ic"><use href="#i-search"/></svg></div><h4>3Dで確認・調整</h4><p>3Dビューで確認。貨物移動・再計算も自由。</p></div>
-<div class="flow-step fade-in" data-slide="step4"><div class="sn">4</div><div class="ibox sm"><svg class="ic"><use href="#i-share"/></svg></div><h4>出力・共有</h4><p>HTML 3D / Excelをワンクリック出力。メールで即共有。</p></div>
-</div>
+  </div>
 </div>
 </section>
 
-<!-- ============ COMPARISON TABLE ============ -->
-<section class="comparison" id="comparison">
-<div class="container">
-<h2 class="section-title fade-in">各ツールの特性</h2>
-<span class="ex-word">Tool Characteristics</span>
-<p class="section-sub fade-in">各積付けツールの機能特性を整理した参考情報です。</p>
+<!-- 03 MERIT -->
+<section class="sec" id="merit">
+<div class="wrap">
+  <div class="sec-hd fade-in"><div class="no"><b>03</b>MERITS &amp; SCENES</div><div><h2>何が変わるか。<br>誰の、どんな場面で役立つか。</h2></div></div>
+  <div class="ba fade-in">
+    <div class="ba-row ba-hd"><div>これまで</div><div></div><div>ExVAN Planner</div></div>
+    <div class="ba-row"><div class="b">手作業で30分以上</div><div class="ar">→</div><div class="a">自動計算で約3分</div></div>
+    <div class="ba-row"><div class="b">Excelの図面を送っても伝わらない</div><div class="ar">→</div><div class="a">HTMLの3Dで共有。スマホでも見られる</div></div>
+    <div class="ba-row"><div class="b">経験者しか安全か判断できない</div><div class="ar">→</div><div class="a">信号表示と数値で、誰でも判断できる</div></div>
+    <div class="ba-row"><div class="b">積載率だけ追って、現場で積めない</div><div class="ar">→</div><div class="a">作業性・安全性も一緒に最適化</div></div>
+    <div class="ba-row"><div class="b">コンテナの選び方が勘頼み</div><div class="ar">→</div><div class="a">コスト比較で最適なコンテナを提案</div></div>
+    <div class="ba-row"><div class="b">データ入力に時間がかかる</div><div class="ar">→</div><div class="a">AIで整えて、貼り付けて取り込み</div></div>
+    <div class="ba-row"><div class="b">クレーム時に記録がない</div><div class="ar">→</div><div class="a">チェックシートでエビデンスを残せる</div></div>
+  </div>
+  <div class="scenes fade-in">
+    <div class="scene"><svg class="ic"><use href="#i-monitor"/></svg><div><h4>オペレーター<small>OPERATOR</small></h4><p>簡単・早い。前回データの再利用で定期便も楽に。</p><q>Excelの手作業から卒業できる</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-brief"/></svg><div><h4>営業<small>SALES</small></h4><p>荷主への提案、見積もりへの即答、状況の共有に。</p><q>荷主に3Dをメールで送れる</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-chart"/></svg><div><h4>マネージャー<small>MANAGER</small></h4><p>コスト削減と属人化の解消。重量・重心・軸数を自動でチェック。</p><q>コンテナが1本減れば、年間で大きな削減に</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-phone"/></svg><div><h4>現場作業員<small>WAREHOUSE</small></h4><p>PCなしで、スマホで積み順を確認。</p><q>スマホで開いて、積み順そのまま</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-factory"/></svg><div><h4>荷主<small>SHIPPER</small></h4><p>輸送コストの削減、梱包の見直し、輸入者への説明資料に。</p><q>梱包を変えたら何本になるか、すぐ分かる</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-ship"/></svg><div><h4>輸入者<small>CONSIGNEE</small></h4><p>開ける前に中の配置を3Dで確認。デバン計画に。</p><q>コンテナを開ける前に、中身が見える</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-anchor"/></svg><div><h4>港湾・船会社<small>TERMINAL</small></h4><p>偏重心の危ないコンテナを事前に把握して、安全管理に。</p><q>危ないコンテナを、積む前に見つける</q></div></div>
+    <div class="scene"><svg class="ic"><use href="#i-truck"/></svg><div><h4>陸送業者<small>DRAYAGE</small></h4><p>過積載と軸重を確認して、法令違反を防ぐ。</p><q>走る前に、違反がないか確認</q></div></div>
+  </div>
+</div>
+</section>
+
+<!-- 04 SECURITY -->
+<section class="sec secu" id="security">
+<div class="wrap">
+  <div class="sec-hd fade-in" style="margin-bottom:30px"><div class="no"><b>04</b>SECURITY</div><div></div></div>
+  <div class="fade-in">
+    <div class="big">通信しない。<br><span>だから、データは出ていかない。</span></div>
+    <p class="intro">ExVAN Planner は、お使いのPCの中だけで動きます。貨物の情報も、荷主や顧客の情報も、インターネットの向こうへ送られることはありません。</p>
+  </div>
+  <div class="pts fade-in">
+    <div><svg class="ic"><use href="#i-wifioff"/></svg><h4>外部通信ゼロ</h4><p>計算も3D表示も、すべてPCの中で完結。オフラインの環境でも動きます。</p></div>
+    <div><svg class="ic"><use href="#i-lock"/></svg><h4>クラウド不要</h4><p>サーバーにデータを置かない作り。保存先はお使いのPCです。</p></div>
+    <div><svg class="ic"><use href="#i-cpu"/></svg><h4>AIを内蔵しない</h4><p>AIでの整形は、お客様が普段お使いの環境で。アプリから外部APIへの送信はありません。</p></div>
+    <div><svg class="ic"><use href="#i-send"/></svg><h4>共有もファイルで</h4><p>3D共有はHTMLファイル。サーバーを通さず、メールなど今の方法で渡せます。</p></div>
+  </div>
+  <p class="note">※ この説明は ExVAN Planner 本体についてです。このWebサイトでは、動画の再生（YouTube）とお問い合わせフォーム（Google フォーム）に外部サービスを使っています。</p>
+</div>
+</section>
+
+<!-- 05 FLOW & VIDEO -->
+<section class="sec" id="flow">
+<div class="wrap">
+  <div class="sec-hd fade-in"><div class="no"><b>05</b>HOW IT WORKS</div><div><h2>ご利用の流れ</h2><p>2分の動画で、基本の操作を見られます。</p></div></div>
+  <div class="flow4 fade-in">
+    <div><span class="n">STEP 1</span><h4>貨物データを用意</h4><p>Excel・CSV・テキスト貼り付け。AIでの整形も。</p></div>
+    <div><span class="n">STEP 2</span><h4>エンジンを選んで計算</h4><p>4つのエンジンから選んでワンクリック。</p></div>
+    <div><span class="n">STEP 3</span><h4>3Dで確認・調整</h4><p>貨物の移動、注釈の追加、再計算も自由に。</p></div>
+    <div><span class="n">STEP 4</span><h4>出力して共有</h4><p>HTML 3D・Excel をワンクリックで出力。</p></div>
+  </div>
+  <div class="video fade-in"><iframe src="https://www.youtube.com/embed/H5DP-TAlD4s" title="ExVAN Planner 操作紹介" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</div>
+</section>
+
+<!-- 06 COMPARE -->
+<section class="sec" id="compare">
+<div class="wrap">
+  <div class="sec-hd fade-in"><div class="no"><b>06</b>COMPARISON</div><div><h2>各ツールの特性</h2><p>積付けツールの機能の違いを整理した参考情報です。</p></div></div>
 <div class="cmp-wrap fade-in">
 <table class="cmp-table">
 <colgroup>
@@ -816,74 +708,32 @@ body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Goth
 </div>
 </div>
 </section>
-<div class="grad-div"></div>
-<div class="grad-div"></div>
 
-<!-- ============ CONTACT ============ -->
-<section class="contact" id="contact">
-<div class="container">
-<h2 class="section-title fade-in">クローズドβ — レビュー協力のお願い</h2>
-<span class="ex-word">Closed Beta Review</span>
-<p class="section-sub fade-in">本フォームは販売・導入・契約を目的としたものではありません。</p>
-<div class="fade-in" style="max-width:640px;margin:0 auto 28px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.15);border-radius:14px;padding:24px 28px;"><div style="font-size:13px;color:#8b949e;line-height:2;margin-bottom:16px;">現在、海上コンテナ積付け実務に関わる方から、<br><strong style="color:#e6edf3;">不具合・操作性・視認性・実務適合性</strong>に関するフィードバックを募集しています。<br><br>正式提供時期・提供条件は未定です。<br>実案件情報・顧客情報・機密情報は入力しないでください。</div><div class="beta-chips"><div><svg class="ic"><use href="#i-lock"/></svg>クローズドβ</div><div><svg class="ic"><use href="#i-wrench"/></svg>開発中検証版</div><div><svg class="ic"><use href="#i-clipcheck"/></svg>実務レビュー</div></div></div>
-<div class="contact-inner fade-in">
-  <div style="background:rgba(30,35,50,0.45);border:1px solid #21262d;border-radius:14px;overflow:hidden;">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdLyUYP_qaqe6b-4tkRJ3sl7koLI_SfIA_Spj8urxJePbI9rg/viewform?embedded=true"
-      width="100%" height="700" frameborder="0" marginheight="0" marginwidth="0"
-      style="display:block;background:transparent;">読み込んでいます…</iframe>
-    <div style="text-align:center;padding:12px;font-size:11px;color:#484f58;border-top:1px solid #21262d;">
-      Google Formで送信されます · お返事はメールにてご連絡します
-    </div>
+<!-- 07 CONTACT -->
+<section class="sec" id="contact">
+<div class="wrap">
+  <div class="sec-hd fade-in"><div class="no"><b>07</b>CLOSED BETA</div><div><h2>クローズドβ — レビュー協力のお願い</h2><p>このフォームは、販売・導入・契約を目的としたものではありません。</p></div></div>
+  <div class="fade-in">
+    <p class="beta-note">海上コンテナの積付け実務に関わる方から、<strong>不具合・操作性・見やすさ・実務への合い方</strong>についてのフィードバックを募集しています。正式な提供時期・条件は未定です。実案件の情報・顧客情報・機密情報は入力しないでください。</p>
+    <div class="beta-chips"><div><svg class="ic"><use href="#i-lock"/></svg>クローズドβ</div><div><svg class="ic"><use href="#i-wrench"/></svg>開発中の検証版</div><div><svg class="ic"><use href="#i-clipcheck"/></svg>実務レビュー</div></div>
+    <div class="form-wrap"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdLyUYP_qaqe6b-4tkRJ3sl7koLI_SfIA_Spj8urxJePbI9rg/viewform?embedded=true" loading="lazy">読み込んでいます…</iframe><div class="fnote">Google フォームで送信されます · お返事はメールでご連絡します</div></div>
   </div>
 </div>
-</div>
+</section>
+
+<!-- OTHER SOFTWARE -->
+<section class="sec" id="other-software">
+<div class="wrap">
+  <div class="sec-hd fade-in" style="margin-bottom:28px"><div class="no"><b>—</b>FRONT SOFTWORKS</div><div><h2 style="font-size:24px">Front Softworks のほかのソフト</h2></div></div>
+  <div class="others fade-in">
+    <a href="https://hiro0149.github.io/pdf-kobo/" target="_blank" rel="noopener"><h4>PDF_KOBO<small>FREE · OPEN SOURCE</small></h4><p>HTML ファイル1つで動く、インストール不要・完全オフラインの PDF 編集ツール。結合・分割・注釈・付箋・ハンコ・黒塗り。</p><div class="u">hiro0149.github.io/pdf-kobo →</div></a>
+    <a href="https://hiro0149.github.io/story-eitango/" target="_blank" rel="noopener"><h4>ものがたり英単語<small>FREE</small></h4><p>英検の級に合わせた単語と熟語を、連続ストーリーの例文で覚える単語学習アプリ。準2級（学園ミステリー「7番ロッカー」全100話）を公開中。</p><div class="u">hiro0149.github.io/story-eitango →</div></a>
+  </div>
 </div>
 </section>
 
-<!-- ============ OTHER SOFTWARE (Front Softworks) ============ -->
-<section id="other-software" style="padding:60px 20px;">
-<div class="container">
-<h2 class="section-title fade-in">Front Softworks のほかのソフト</h2>
-<span class="ex-word">Other Software</span>
-<div class="fade-in" style="max-width:640px;margin:24px auto 0;display:grid;gap:12px;">
-  <a href="https://hiro0149.github.io/pdf-kobo/" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.15);border-radius:14px;padding:20px 24px;">
-    <div style="font-size:17px;font-weight:700;color:#e6edf3;">PDF_KOBO <span style="font-size:11px;font-weight:600;color:#3fb950;border:1px solid rgba(63,185,80,0.4);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:middle;">無料・オープンソース</span></div>
-    <div style="font-size:13px;color:#8b949e;line-height:1.8;margin-top:6px;">HTML ファイル1つで動く、インストール不要・完全オフラインの PDF 編集ツール。結合・分割・注釈・付箋・ハンコ・黒塗り。</div>
-    <div style="font-size:12px;color:#58a6ff;margin-top:8px;">hiro0149.github.io/pdf-kobo →</div>
-  </a>
-  <a href="https://hiro0149.github.io/story-eitango/" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.15);border-radius:14px;padding:20px 24px;">
-    <div style="font-size:17px;font-weight:700;color:#e6edf3;">ものがたり英単語 <span style="font-size:11px;font-weight:600;color:#3fb950;border:1px solid rgba(63,185,80,0.4);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:middle;">無料・登録不要</span></div>
-    <div style="font-size:13px;color:#8b949e;line-height:1.8;margin-top:6px;">英検の級に合わせた単語と熟語を、連続ストーリーの例文で覚える単語学習アプリ。準2級（学園ミステリー「7番ロッカー」全100話）を公開中。</div>
-    <div style="font-size:12px;color:#58a6ff;margin-top:8px;">hiro0149.github.io/story-eitango →</div>
-  </a>
-</div>
-</div>
-</section>
+<footer><div class="wrap"><span>© 2026 ExVAN Planner — Front Softworks</span><span class="mono">v1.2.4</span></div></footer>
 
-<footer><p style="margin-bottom:4px;font-size:10px;color:#30363d;">v1.2.4 — 2026.06.12</p><p>© 2026 ExVAN Planner — Container Loading Optimization Software</p><p style="margin-top:6px;"><a href="#">プライバシーポリシー</a> | <a href="#">利用規約</a></p></footer>
-
-<!-- SLIDE-IN PANEL -->
-<div class="slide-overlay" id="slideOverlay"></div>
-<div class="slide-panel" id="slidePanel">
-<div class="slide-header">
-<h3 id="slideTitle">機能詳細</h3>
-<button class="slide-close" id="slideClose">✕</button>
-</div>
-<div class="slide-body">
-<div class="slide-img-wrap">
-<img class="slide-img" src="https://exvan-planner.github.io/ExVANtop.png" alt="ExVAN Planner 画面">
-<div class="slide-ov" id="slideOvTop"></div>
-<div class="slide-ov" id="slideOvBottom"></div>
-<div class="slide-ov" id="slideOvLeft"></div>
-<div class="slide-ov" id="slideOvRight"></div>
-<div class="slide-hl-frame" id="slideHlFrame"></div>
-</div>
-<div class="slide-highlight" id="slideHighlights"></div>
-<div class="slide-cta">クリックで機能の詳細を確認できます</div>
-</div>
-</div>
-
-<!-- ============ THREE.JS HERO ANIMATION ============ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
@@ -907,11 +757,11 @@ renderer.setSize(W(),H(),false);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 const scene=new THREE.Scene();
 scene.background=null;
-scene.fog=new THREE.Fog(0x0e141d,18,45);
+scene.fog=new THREE.Fog(0x0b1016,18,45);
 const camera=new THREE.PerspectiveCamera(40,W()/H(),0.1,80);
 camera.position.set(14,7,11);
 const controls=new THREE.OrbitControls(camera,canvas);
-controls.enableDamping=true;controls.dampingFactor=0.05;controls.target.set(5,1.2,1.2);
+controls.enableDamping=true;controls.dampingFactor=0.05;controls.target.set(2.6,1.2,1.2);
 controls.autoRotate=true;controls.autoRotateSpeed=0.5;controls.enableZoom=false;controls.enablePan=false;
 scene.add(new THREE.AmbientLight(0x404060,0.5));
 const dl=new THREE.DirectionalLight(0xffffff,0.8);dl.position.set(10,14,8);scene.add(dl);
@@ -965,309 +815,16 @@ window.addEventListener('resize',()=>{camera.aspect=W()/H();camera.updateProject
 controls.addEventListener('start',()=>{controls.autoRotate=false;});
 controls.addEventListener('end',()=>{setTimeout(()=>{controls.autoRotate=true;},3000);});
 })();
-// Fade-in
-document.addEventListener('DOMContentLoaded',()=>{const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.1});document.querySelectorAll('.fade-in').forEach(el=>o.observe(el));});
-
-// Slide Panel Data
-const slideData = {
-  // 3つの約束
-  simple: {
-    title: 'すごくシンプル — 操作画面',
-    highlights: [
-      { label: '1', title: 'サイドバー', desc: '入力・エンジン選択・クリアランス・出力。すべてここに集約。' },
-      { label: '2', title: '3Dビューワー', desc: '中央に大きく表示。回転・ズーム・スライダー操作。' },
-      { label: '3', title: '貨物明細', desc: 'サイズ・重量・耐荷重を画面上で直接編集→即再計算。' },
-    ]
-  },
-  visual: {
-    title: 'すごく見やすい — 3D表示',
-    highlights: [
-      { label: '1', title: '3Dリアルタイム表示', desc: '積付け結果を立体で直感的に確認。' },
-      { label: '2', title: 'ヒートマップ', desc: '重量を色で可視化。偏りが一目瞭然。' },
-      { label: '3', title: '<span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span>アラート', desc: '過積載・偏重心の状態を信号色で即判断。' },
-    ]
-  },
-  html3d_promise: {
-    title: 'すごく伝わる — HTML 3D出力で荷主・現場と共有',
-    highlights: [
-      { label: '1', title: 'メール添付で即共有', desc: 'HTMLファイルをメールに添付するだけ。受け取った側はブラウザで開くだけ——インストール不要・アカウント不要。' },
-      { label: '2', title: '誰でも・どこでも・無料で閲覧', desc: 'スマホ・タブレット・PCに対応。現場・倉庫・荷主が同じ3Dを見て話せる。' },
-      { label: '3', title: '積み残しも3Dで説明', desc: '積めなかった貨物も待避状態のままHTML出力。「なぜ積めないか」を視覚的に説明できる。' },
-      { label: '4', title: '提案・交渉の資料になる', desc: '梱包変更の提案、次船への振替、LCL/AIR切替の判断——3D資料があれば荷主との合意が早い。' },
-    ]
-  },
-  cost: {
-    title: 'すごく安い — コスト構造',
-    highlights: [
-      { label: '1', title: 'ローカル動作', desc: 'サーバー費用ゼロ。クラウド不要。' },
-      { label: '2', title: 'AI非搭載', desc: 'API費用ゼロ。企業の既存LLMを活用する設計。' },
-      { label: '3', title: '構造的に安い', desc: '値引きではない。原価構造が違う。' },
-    ]
-  },
-  // エンジン
-  katayose: {
-    title: 'KATAYOSE ENGINE — 残スペース可視化',
-    highlights: [
-      { label: 'K', title: '奥詰め配置', desc: 'とにかく奥から詰めて、残りスペースを可視化。' },
-      { label: 'K', title: '物量流動対応', desc: 'コンテナ確定・物量未定の場面に最適。' },
-    ]
-  },
-  bunsan: {
-    title: 'BUNSAN ENGINE — 最適積付け',
-    highlights: [
-      { label: 'B', title: '壁構造型アルゴリズム', desc: '職人のような壁を作る積み方を自動生成。' },
-      { label: 'B', title: '高さ最適化理論', desc: '独自理論で最適な積み高さを自動検知。' },
-      { label: 'B', title: '自動スコアリング', desc: '複数パターンを比較し最良を提案。' },
-    ]
-  },
-  anzen: {
-    title: 'ANZEN ENGINE — 重心制御',
-    highlights: [
-      { label: 'A', title: '標準偏差検知', desc: '集団の中の異常重量物を自動検出。' },
-      { label: 'A', title: 'シーソー配置', desc: '左右バランスを取る配置を自動計算。' },
-      { label: 'A', title: 'Safe Zone', desc: '重心位置がSafe Zone内かを3Dで可視化。' },
-    ]
-  },
-  // 5つの特長
-  html3d: {
-    title: 'HTML 3D出力 — ブラウザで共有',
-    highlights: [
-      { label: 'H', title: 'ブラウザで開くだけ', desc: '専用ソフト不要。スマホ・タブレットにも対応。' },
-      { label: 'H', title: 'メール添付OK', desc: '軽量サイズ設計。メール添付で即共有。' },
-      { label: 'H', title: 'スライダー・ヒートマップ', desc: '段階再生・重量カラー表示も搭載。' },
-    ]
-  },
-  waterline: {
-    title: '自動高さ調整 — 独自理論',
-    highlights: [
-      { label: 'W', title: '最適高さ自動検知', desc: '貨物構成から理想の積み高さを自動計算。' },
-      { label: 'W', title: '壁品質評価', desc: '荷崩れしない・作業しやすい配置を追求。' },
-    ]
-  },
-  safety: {
-    title: '安全アラート — リアルタイム監視',
-    highlights: [
-      { label: 'S', title: '<span class="sig"><i class="g"></i><i class="y"></i><i class="r"></i></span>三段階表示', desc: '充填率・過積載・偏重心を色と数値で表示。' },
-      { label: 'S', title: '2軸/3軸計算', desc: '車両の軸重計算にも対応。法令遵守を支援。' },
-    ]
-  },
-  ai: {
-    title: 'AI連携 — データ整形',
-    highlights: [
-      { label: 'AI', title: 'プロンプト内蔵', desc: 'コピーボタンでLLMにすぐ渡せる。' },
-      { label: 'AI', title: 'カスタマイズ保存', desc: '業務に合わせてプロンプトを編集・保存。' },
-    ]
-  },
-  checklist: {
-    title: 'チェックシート — エビデンス出力',
-    highlights: [
-      { label: 'C', title: 'CLP指示書', desc: 'Excelで出力。現場指示書としてそのまま使用。' },
-      { label: 'C', title: '貨物チェック機能', desc: '積付け記録がそのままエビデンスに。' },
-    ]
-  },
-  // ご利用の流れ
-  step1: {
-    title: 'Step 1 — 貨物データ準備',
-    highlights: [
-      { label: '1', title: 'Excel / CSV 読込', desc: 'サイドバーのボタンからワンクリックで読込。' },
-      { label: '1', title: 'テキスト貼り付け', desc: 'LLMで整形したデータをコピペで取込。' },
-    ]
-  },
-  step2: {
-    title: 'Step 2 — エンジン選択・計算',
-    highlights: [
-      { label: '2', title: 'エンジン選択', desc: 'サイドバーで3つのエンジンから選択。' },
-      { label: '2', title: 'ワンクリック計算', desc: 'ボタン1つで自動積付け開始。' },
-    ]
-  },
-  step3: {
-    title: 'Step 3 — 3Dで確認・調整',
-    highlights: [
-      { label: '3', title: '3Dビューワー', desc: '回転・ズーム・スライダーで段階確認。' },
-      { label: '3', title: '手動調整', desc: '貨物の移動・削除・別コンテナ移動も自由。' },
-    ]
-  },
-  step4: {
-    title: 'Step 4 — 出力・共有',
-    highlights: [
-      { label: '4', title: 'HTML 3D出力', desc: 'ワンクリックでHTML生成。メール添付で即共有。' },
-      { label: '4', title: 'Excel出力', desc: 'CLP指示書・チェックシートを同時出力。' },
-    ]
-  },
-};
-
-// Highlight area definitions (% of image: l=left, t=top, w=width, h=height, c=color)
-const HIGHLIGHT_AREAS = {
-  sidebar:   {l:0,  t:0,  w:16, h:100, c:'#58a6ff'},
-  alert:     {l:16, t:0,  w:56, h:18,  c:'#3fb950'},
-  viewer3d:  {l:16, t:18, w:56, h:52,  c:'#58a6ff'},
-  container: {l:16, t:70, w:56, h:30,  c:'#f0883e'},
-  detail:    {l:72, t:0,  w:28, h:55,  c:'#a371f7'},
-  comment:   {l:72, t:55, w:28, h:45,  c:'#f0883e'},
-};
-const KEY_TO_AREA = {
-  simple:'sidebar', cost:'sidebar', step1:'sidebar', step2:'sidebar',
-  katayose:'viewer3d', bunsan:'viewer3d', anzen:'viewer3d', step3:'viewer3d', viewer3d:'viewer3d',
-  html3d:'detail', step4:'detail', checklist:'detail', ai:'detail',
-  safety:'viewer3d', waterline:'viewer3d',
-  alert:'alert', visual:'viewer3d',
-};
-
-const MULTI_IMAGES = {
-  visual: [
-    { src: 'https://exvan-planner.github.io/ss_anzen.png',       cap: '通常積付け — 3D表示' },
-    { src: 'https://exvan-planner.github.io/ss_alert.png',       cap: '過積載 & 偏重心NG' },
-    { src: 'https://exvan-planner.github.io/ss_anzen_3axis.png', cap: '3軸クリア & 偏重心OK' },
-  ],
-  anzen: [
-    { src: 'https://exvan-planner.github.io/ss_anzen.png',       cap: '通常積付け — 重心・偏重心を自動制御' },
-    { src: 'https://exvan-planner.github.io/ss_alert.png',       cap: '過積載 & 偏重心NG — アラートで即検知' },
-    { src: 'https://exvan-planner.github.io/ss_anzen_3axis.png', cap: '3軸クリア & 偏重心OK — 安全確認済み' },
-  ],
-  safety: [
-    { src: 'https://exvan-planner.github.io/ss_alert.png',       cap: '過積載 & 偏重心NG — アラートで即検知' },
-    { src: 'https://exvan-planner.github.io/ss_anzen_3axis.png', cap: '3軸クリア & 偏重心OK — 安全確認済み' },
-  ],
-  alert: [
-    { src: 'https://exvan-planner.github.io/ss_alert.png',       cap: '過積載 & 偏重心NG — アラートで即検知' },
-    { src: 'https://exvan-planner.github.io/ss_anzen_3axis.png', cap: '3軸クリア & 偏重心OK — 安全確認済み' },
-  ],
-};
-
-const DEDICATED_IMAGES = {
-  alert:    'https://exvan-planner.github.io/ss_alert.png',
-  katayose: 'https://exvan-planner.github.io/ss_katayose.png',
-  bunsan:   'https://exvan-planner.github.io/ss_bunsan.png',
-  anzen:    'https://exvan-planner.github.io/ss_anzen.png',
-};
-
-// Panel Elements
-const overlay = document.getElementById('slideOverlay');
-const panel = document.getElementById('slidePanel');
-const slideTitle = document.getElementById('slideTitle');
-const slideHighlights = document.getElementById('slideHighlights');
-const slideClose = document.getElementById('slideClose');
-
-function setHighlight(areaKey) {
-  const a = HIGHLIGHT_AREAS[areaKey];
-  if (!a) return;
-  const r = a.l + a.w, b = a.t + a.h;
-  document.getElementById('slideOvTop').style.cssText    = 'top:0;left:0;width:100%;height:' + a.t + '%;';
-  document.getElementById('slideOvBottom').style.cssText = 'top:' + b + '%;left:0;width:100%;height:' + (100 - b) + '%;';
-  document.getElementById('slideOvLeft').style.cssText   = 'top:' + a.t + '%;left:0;width:' + a.l + '%;height:' + a.h + '%;';
-  document.getElementById('slideOvRight').style.cssText  = 'top:' + a.t + '%;left:' + r + '%;width:' + (100 - r) + '%;height:' + a.h + '%;';
-  const fr = document.getElementById('slideHlFrame');
-  fr.style.cssText = 'top:' + a.t + '%;left:' + a.l + '%;width:' + a.w + '%;height:' + a.h + '%;border-color:' + a.c + ';animation:hl-pulse-frame 1.5s ease-in-out infinite;';
-  // Restart pulse animation
-  fr.style.animationName = 'none';
-  fr.offsetHeight;
-  fr.style.animationName = 'hl-pulse-frame';
-}
-
-function openSlide(key) {
-  const data = slideData[key];
-  if (!data) return;
-
-  slideTitle.textContent = data.title;
-
-  let hlHtml = '';
-  data.highlights.forEach(h => {
-    hlHtml += '<div class="hl-item">' +
-      '<div class="hl-box">' + h.label + '</div>' +
-      '<div class="hl-text"><strong>' + h.title + '</strong>' + h.desc + '</div>' +
-      '</div>';
-  });
-  slideHighlights.innerHTML = hlHtml;
-
-  const slideImg = document.querySelector('.slide-img');
-  const ovIds = ['slideOvTop','slideOvBottom','slideOvLeft','slideOvRight','slideHlFrame'];
-  const multiImgs = MULTI_IMAGES[key];
-
-  const existingSlider = document.getElementById('multiSlider');
-  if (existingSlider) existingSlider.remove();
-
-  if (multiImgs) {
-    ovIds.forEach(id => { document.getElementById(id).style.cssText = 'display:none;'; });
-    document.querySelector('.slide-img-wrap').style.display = 'none';
-
-    const existingModal = document.getElementById('thumbModal');
-    if (existingModal) existingModal.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'thumbModal';
-    modal.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;flex-direction:column;gap:12px;';
-    const modalImg = document.createElement('img');
-    modalImg.style.cssText = 'max-width:90vw;max-height:82vh;border-radius:8px;box-shadow:0 0 60px rgba(0,0,0,0.9);pointer-events:none;';
-    const modalCap = document.createElement('div');
-    modalCap.style.cssText = 'font-size:13px;color:#e6edf3;background:rgba(30,35,50,0.9);padding:6px 20px;border-radius:20px;';
-    const modalHint = document.createElement('div');
-    modalHint.style.cssText = 'font-size:11px;color:#6e7681;';
-    modalHint.textContent = 'クリックで閉じる';
-    modal.appendChild(modalImg);
-    modal.appendChild(modalCap);
-    modal.appendChild(modalHint);
-    modal.addEventListener('click', () => { modal.style.display = 'none'; });
-    document.body.appendChild(modal);
-
-    const grid = document.createElement('div');
-    grid.id = 'multiSlider';
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(' + multiImgs.length + ',1fr);gap:8px;padding:16px;background:#0d1117;';
-
-    multiImgs.forEach((item) => {
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'border-radius:6px;overflow:hidden;border:1px solid #21262d;cursor:zoom-in;transition:border-color .2s,transform .2s;';
-      const img = document.createElement('img');
-      img.src = item.src;
-      img.style.cssText = 'width:100%;display:block;aspect-ratio:16/9;object-fit:cover;';
-      const cap = document.createElement('div');
-      cap.style.cssText = 'font-size:10px;color:#8b949e;padding:4px 6px;background:#161b22;line-height:1.3;text-align:center;';
-      cap.textContent = item.cap;
-      wrap.appendChild(img);
-      wrap.appendChild(cap);
-      wrap.addEventListener('mouseenter', () => { wrap.style.borderColor = '#58a6ff'; wrap.style.transform = 'scale(1.02)'; });
-      wrap.addEventListener('mouseleave', () => { wrap.style.borderColor = '#21262d'; wrap.style.transform = 'scale(1)'; });
-      wrap.addEventListener('click', () => { modalImg.src = item.src; modalCap.textContent = item.cap; modal.style.display = 'flex'; });
-      grid.appendChild(wrap);
-    });
-
-    document.querySelector('.slide-highlight').before(grid);
-
-  } else if (DEDICATED_IMAGES[key]) {
-    slideImg.src = DEDICATED_IMAGES[key];
-    ovIds.forEach(id => { document.getElementById(id).style.cssText = 'display:none;'; });
-  } else {
-    slideImg.src = 'https://exvan-planner.github.io/ExVANtop.png';
-    ovIds.forEach(id => { document.getElementById(id).style.display = ''; });
-    setHighlight(KEY_TO_AREA[key] || 'viewer3d');
-  }
-
-  overlay.classList.add('active');
-  panel.classList.add('active');
-}
-
-function closeSlide() {
-  overlay.classList.remove('active');
-  panel.classList.remove('active');
-  const existingSlider = document.getElementById('multiSlider');
-  if (existingSlider) existingSlider.remove();
-  const existingModal = document.getElementById('thumbModal');
-  if (existingModal) existingModal.remove();
-  document.querySelector('.slide-img-wrap').style.display = '';
-}
-
-slideClose.addEventListener('click', closeSlide);
-overlay.addEventListener('click', closeSlide);
-
-document.querySelectorAll('[data-slide]').forEach(el => {
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-    openSlide(el.getAttribute('data-slide'));
-  });
-});
-
-// Accordion
-document.querySelectorAll('.acc-hd').forEach(h=>{h.addEventListener('click',()=>{const it=h.parentElement;const w=it.classList.contains('open');document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));if(!w)it.classList.add('open');});});
 </script>
-
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.08});
+  document.querySelectorAll('.fade-in').forEach(el=>o.observe(el));
+  document.querySelectorAll('.acc-hd').forEach(h=>h.addEventListener('click',()=>{const it=h.parentElement;const w=it.classList.contains('open');document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));if(!w)it.classList.add('open');}));
+  const d=document.getElementById('demo'),ph=d.querySelector('.ph');
+  const load=()=>{const f=document.createElement('iframe');f.src='demo.html';f.title='ExVAN Planner 3D出力サンプル';d.appendChild(f);ph.remove();};
+  ph.addEventListener('click',load);ph.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')load();});
+});
+</script>
 </body>
 </html>
